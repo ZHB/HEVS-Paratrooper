@@ -85,7 +85,12 @@ Crafty.c('Grass', {
         .image("./images/grass.jpg");
     }
 });
-
+Crafty.c('IslandRight', {
+    init: function() {
+        this.requires('2D, Canvas, GridAlignment, Image')
+        .image("./assets/island.png");
+    }
+});
 
 Crafty.c('DropZone', {
     init: function() {
