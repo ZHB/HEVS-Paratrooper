@@ -88,20 +88,36 @@ Crafty.c('Grass', {
 Crafty.c('RightIsland', {
     init: function() {
         this.requires('2D, Canvas, GridAlignment, Image')
+        .attr({'z':5})
         .image("./assets/island.png");
     }
 });
 Crafty.c('LeftIsland', {
     init: function() {
         this.requires('2D, Canvas, GridAlignment, Image')
+        .attr({'z':5})
         .image("./assets/islandLeft.png");
     }
 });
 
-Crafty.c('DropZone', {
+Crafty.c('jollyBoat', {
+    dir: 'e',
+    speed: 2,
     init: function() {
-        this.requires('2D, Canvas, GridAlignment, Color')
-        .color('#cccccc');
+        this.requires('2D, Canvas, GridAlignment, Color, Collision')
+        .color('#cccccc')
+        .bind("EnterFrame", function(e) { // event trigered when whe enter the frame : https://github.com/craftyjs/Crafty/wiki/Event-List
+            
+            // move the plane in the right direction
+            this.move(this.dir, this.speed);
+        })
+        .collision()
+        .onHit("RightIsland", function(e) {
+                this.dir = 'w';
+        })
+        .onHit("LeftIsland", function(e) {
+                this.dir = 'e';
+        })
     }
 });
 
@@ -173,7 +189,7 @@ Crafty.c('ParatrooperSailOpened', {
 		.onHit("Grass", function(e) {
 			alert('You loose');
 		})
-		.onHit("DropZone", function(e) {
+		.onHit("jollyBoat", function(e) {
 		
 			// récupérer les positions x/y
 			

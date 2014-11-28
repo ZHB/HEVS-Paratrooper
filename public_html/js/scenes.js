@@ -91,7 +91,7 @@ Crafty.scene("main", function() {
     drawGrass();    
 
     // draw drop zone
-    Crafty.e('DropZone').at(Game.map_grid.width / 2 - 3, Game.map_grid.height - 2).dim(6, 1);
+    Crafty.e('jollyBoat').at(Game.map_grid.width / 2 - 3, Game.map_grid.height - 2).dim(6, 1);
 
     // the plane
     var plane = Crafty.e('Plane').at(0, 50).dim(200, 63);

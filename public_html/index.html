@@ -2,7 +2,7 @@
 <html>
 <head>
  <style>
-    body, html { margin:0; padding: 0; font-family:Arial; font-size:20px }
+    body, html { margin:0; padding: 0; font-family:Arial; font-size:20px;background: #000; }
     #cr-stage { border:2px solid black; margin:5px auto; color:white }
   </style>
 </head>
@@ -17,10 +17,10 @@
     <script>window.addEventListener('load', Game.start());</script>
     <script>
         document.documentElement.addEventListener('keydown', function (e) {
-    if ( ( e.keycode || e.which ) == 32) {
-        e.preventDefault();
-    }
-}, false); 
+            if ( ( e.keycode || e.which ) == 32) {
+                e.preventDefault();
+            }
+        }, false); 
     </script>
 	
 </body>
