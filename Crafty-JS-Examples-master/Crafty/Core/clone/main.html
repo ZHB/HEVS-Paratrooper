@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      #cr-stage { border:2px solid black; margin:5px auto; color:white }
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript" src="http://cdn.crafty-modules.com/crafty-DEBUG.js"></script>
+    <script>
+      window.onload = function () {
+        (function() {
+          var x={x:1, y:2};
+          var y=x;
+          y.x=3
+          document.write(JSON.stringify(x) + '<br/>');
+          document.write(JSON.stringify(y) + '<br/>');
+        })();
+        (function() {
+          var x={x:1, y:2};
+          var y=Crafty.clone(x);
+          y.x=3
+          document.write(JSON.stringify(x) + '<br/>');
+          document.write(JSON.stringify(y) + '<br/>');
+        })();
+      };
+    </script>
+  </body>
+</html>
+</body>

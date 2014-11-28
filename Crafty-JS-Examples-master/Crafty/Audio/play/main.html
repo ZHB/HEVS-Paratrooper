@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      #cr-stage { border:2px solid black; margin:5px auto}
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript" src="http://cdn.crafty-modules.com/crafty-DEBUG.js"></script>
+    <script>
+      window.onload = function () {
+        Crafty.audio.add({
+          water_splash: [
+          "water_splash.wav",
+          "water_splash.mp3",
+          "water_splash.ogg",
+          ],
+        });
+
+        Crafty.audio.play("water_splash", -1);
+      }
+    </script>
+  </body>
+</html>

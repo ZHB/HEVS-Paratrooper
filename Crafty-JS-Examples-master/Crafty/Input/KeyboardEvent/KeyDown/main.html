@@ -1,0 +1,37 @@
+<!DOCTYPE html5>
+<html>
+  <head>
+    <style>
+      body, html { margin:0; padding: 0; overflow:hidden; font-family:Arial; font-size:20px }
+      #cr-stage { border:2px solid black; margin:5px auto;}
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript" src="http://cdn.crafty-modules.com/crafty-DEBUG.js"></script>
+    <script>
+      window.onload = function () {
+        Crafty.init(400, 336);
+
+        Crafty.scene("main", function () {
+          Crafty.e("2D, DOM, Color")
+          .attr({x: 100, y: 100, w: 50, h: 50})
+          .color("red")
+          .bind('KeyDown', function(e) {
+            if(e.key == Crafty.keys['LEFT_ARROW']) {
+              this.x=this.x-1;
+              } else if (e.key == Crafty.keys['RIGHT_ARROW']) {
+              this.x=this.x+1;
+              } else if (e.key == Crafty.keys['UP_ARROW']) {
+              this.y=this.y-1;
+              } else if (e.key == Crafty.keys['DOWN_ARROW']) {
+              this.y=this.y+1;
+            }
+          })
+          ;
+        });
+
+        Crafty.scene("main");
+      };
+    </script>
+  </body>
+</html>
