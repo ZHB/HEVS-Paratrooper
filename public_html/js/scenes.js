@@ -73,7 +73,7 @@ Crafty.scene("main", function() {
     Crafty.background('url("./images/game-bg.png") no-repeat center bottom / cover #87ceeb');
 	
     //Chargement des composants :
-    Crafty.e('RightIsland').at(Game.map_grid.width / 2, Game.map_grid.height - 2).dim(6, 1);;
+    Crafty.e('RightIsland').at(Game.map_grid.width * Game.map_grid.tile.width).dim(6, 1);
 	
     Crafty.e('Floor');
 
