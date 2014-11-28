@@ -70,7 +70,8 @@ Crafty.scene("score", function() {
 // Game screen
 Crafty.scene("main", function() {
     //Crafty.background('SkyBlue');
-    Crafty.background('url("./images/game-bg.png") no-repeat center bottom / cover #87ceeb');
+    //Crafty.background('url("./images/game-bg.png") no-repeat center bottom / cover #81d4fa');
+    Crafty.background('#81d4fa');
 	
     /* ############################ [loading scene assets] ############################ */
     
