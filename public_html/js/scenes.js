@@ -75,7 +75,7 @@ Crafty.scene("main", function() {
     /* ############################ [loading scene assets] ############################ */
     
     // Right island
-    Crafty.e('RightIsland').at(Game.map_grid.width * Game.map_grid.tile.width - 15, Game.map_grid.height * Game.map_grid.tile.height - 13).dim(14, 12);
+    Crafty.e('RightIsland').at(Game.map_grid.width - 20, Game.map_grid.height - 11).dim(14, 12);
 	
         
     
