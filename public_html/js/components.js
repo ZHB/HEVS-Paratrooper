@@ -91,6 +91,12 @@ Crafty.c('RightIsland', {
         .image("./assets/island.png");
     }
 });
+Crafty.c('LeftIsland', {
+    init: function() {
+        this.requires('2D, Canvas, GridAlignment, Image')
+        .image("./assets/islandLeft.png");
+    }
+});
 
 Crafty.c('DropZone', {
     init: function() {
