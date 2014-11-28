@@ -85,7 +85,7 @@ Crafty.c('Grass', {
         .image("./images/grass.jpg");
     }
 });
-Crafty.c('IslandRight', {
+Crafty.c('RightIsland', {
     init: function() {
         this.requires('2D, Canvas, GridAlignment, Image')
         .image("./assets/island.png");
