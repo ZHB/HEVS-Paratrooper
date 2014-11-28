@@ -72,9 +72,13 @@ Crafty.scene("main", function() {
     //Crafty.background('SkyBlue');
     Crafty.background('url("./images/game-bg.png") no-repeat center bottom / cover #87ceeb');
 	
-    //Chargement des composants :
-    Crafty.e('RightIsland').at(Game.map_grid.width * Game.map_grid.tile.width).dim(6, 1);
+    /* ############################ [loading scene assets] ############################ */
+    
+    // Right island
+    Crafty.e('RightIsland').at(Game.map_grid.width * Game.map_grid.tile.width - 15, Game.map_grid.height * Game.map_grid.tile.height - 13).dim(14, 12);
 	
+        
+    
     Crafty.e('Floor');
 
 
