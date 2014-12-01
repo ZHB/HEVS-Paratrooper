@@ -104,8 +104,8 @@ Crafty.c('jollyBoat', {
     dir: 'e',
     speed: 2,
     init: function() {
-        this.requires('2D, Canvas, GridAlignment, Color, Collision')
-        .color('#cccccc')
+        this.requires('2D, Canvas, PixelAlignment, Collision, Image')
+        .image("./assets/jollyBoat.png")
         .bind("EnterFrame", function(e) { // event trigered when whe enter the frame : https://github.com/craftyjs/Crafty/wiki/Event-List
             
             // move the plane in the right direction
@@ -136,7 +136,7 @@ Crafty.c('Cloud', {
 // This is the player-controlled character
 Crafty.c('Plane', {
     dir: 'e',
-    speed: 1,
+    speed: 2,
     init: function() {
         this.requires('2D, Canvas, PixelAlignment, Image, audio')
         .image("./images/pc6porter.png")
@@ -178,24 +178,28 @@ Crafty.c('ParatrooperSailOpened', {
     init: function() {
         this.requires('2D, Canvas, PixelAlignment, Multiway, Image, Gravity, Delay, Collision')
         .image("./assets/paratroopersailopen.png")
-        .gravityConst(0.002)
+        .gravityConst(0.0008)
         .gravity("Floor")
 		// open parachute after cerain delay
         .delay(function() {
             // add possibility to move the paratrooper after it has opened his sail
             this.multiway(1, {DOWN_ARROW: 90, RIGHT_ARROW: 0, LEFT_ARROW: 180});
-        }, 800, 0)
-		.collision()
-		.onHit("Grass", function(e) {
-			alert('You loose');
-		})
-		.onHit("jollyBoat", function(e) {
-		
-			// récupérer les positions x/y
-			
-			// charger la scène score et afficher
-			Crafty.scene("score");
-		});
+        }, 600, 0)
+        .collision()
+        .onHit("Grass", function(e) {
+                alert('You loose');
+        })
+        .onHit("jollyBoat", function(e) {
+
+                // récupérer les positions x/y
+
+                // charger la scène score et afficher
+                Crafty.scene("score");
+        })
+        .onHit("ExtraUp", function(e) {
+                this.y = this._y - 200;
+                
+        });
     }
 });
 
@@ -225,6 +229,18 @@ Crafty.c('Bird', {
                 this.destroy();
             }
         })
+        .collision()
+        .onHit("ParatrooperSailOpened", function(e) {
+
+                //shaker.shaker(25);
+
+                // birds falls to the ground
+                this.addComponent("Gravity").gravity("Floor");
+        })
+        .onHit("Grass", function(e) {
+                // birds falls to the ground
+                this.destroy();
+        }) 
          // These next lines define our four animations
         // each call to .animate specifies:
         // - the name of the animation
@@ -232,8 +248,8 @@ Crafty.c('Bird', {
         // map at which the animation set begins
         // - the number of animation frames *in addition to* the first one
         //.animate('PlayerMovingRight', 0, 1, 2)
-        .reel('PlayerMovingRight', 1000, 0, 0, 7) // time between changes, colums, row, number
-        .animate('PlayerMovingRight', -1); // -1 : infinite animation
+        .reel('PlayerMovingRisght', 1000, 0, 0, 7) // time between changes, colums, row, number
+        .animate('PlayerMovingRisght', -1); // -1 : infinite animation
     }
 });
 
@@ -282,3 +298,13 @@ Crafty.c("shaker", {
  */
 
 
+Crafty.c('ExtraUp', {
+    init: function() {
+        this.requires('2D, Canvas, GridAlignment, Image, SpriteAnimation, spr_arrow')
+        .dim(2,2)
+        .attr({'z':100})
+        .reel('ArrowUp', 800, 0, 3, 3) // time between changes, colums, row, number
+        .animate('ArrowUp', -1); // -1 : infinite animation
+        //.image("./assets/islandLeft.png");
+    }
+});

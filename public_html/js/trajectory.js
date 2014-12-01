@@ -17,3 +17,14 @@ Crafty.c("RandomPosition", {
         });
     }
 });
+
+
+Crafty.c("RandomAppearTime", {
+    init: function() {
+        this.requires('Delay')
+        this.delay(function() {
+            // remove the component after a delay
+            this.destroy();
+        }, Crafty.math.randomInt(3000, 10000), 0);
+    }
+});

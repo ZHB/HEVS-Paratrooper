@@ -86,5 +86,5 @@ function jump(plane)
 
                 
             //Crafty.viewport.follow(paraSailOpened, 0, 0);
-        }, 1200, 0);
+        }, 800, 0);
 }

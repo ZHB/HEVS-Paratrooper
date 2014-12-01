@@ -2,44 +2,32 @@
 Crafty.scene("sce_loading", function() {
     Crafty.background("#111");
    
+
      // Load our sprite map image
-    Crafty.load(['./assets/16x16_forest_1.gif', './assets/loading.png', './assets/hunter.png', './assets/spr_bird.png'], function(){
+    Crafty.load(['./assets/16x16_forest_1.gif', './assets/loading.png', './assets/hunter.png', './assets/spr_bird.png', './assets/spr_arrow.png', './sounds/plane-flying-over.mp3'], function(){
         // Once the image is loaded...
 
-		Crafty.audio.add({
-			planeflyingover: [
-				"./sounds/plane-flying-over.mp3",
-			],
-		});
-
-		
-        // Define the individual sprites in the image
-        // Each one (spr_tree, etc.) becomes a component
-        // These components' names are prefixed with "spr_"
-        // to remind us that they simply cause the entity
-        // to be drawn with a certain sprite
-        Crafty.sprite(16, './assets/16x16_forest_1.gif', {
-            spr_tree: [0, 0],
-            spr_bush: [1, 0],
-            spr_village: [0, 1]
+        Crafty.audio.add({
+                planeflyingover: [
+                        "./sounds/plane-flying-over.mp3",
+                ],
         });
         
         Crafty.sprite("./assets/loading.png", {
             spr_loading: [0,0, 430, 396]
         });
         
-        // Define the PC's sprite to be the first sprite in the third row of the
-        // animation sprite map
-        Crafty.sprite(16, 'assets/hunter.png', {
-            spr_player: [0, 2],
-        }, 0, 2);
+
 		
-		// Define the PC's sprite to be the first sprite in the third row of the
+        // Define the PC's sprite to be the first sprite in the third row of the
         // animation sprite map
         Crafty.sprite(40, 40, 'assets/spr_bird.png', {
             spr_bird: [0,1]
         });
 
+        Crafty.sprite(42, 42, 'assets/spr_arrow.png', {
+            spr_arrow: [0,1]
+        });
 
         // Now that our sprites are ready to draw, start the game on click
         // 215 is half sprite size
@@ -90,8 +78,14 @@ Crafty.scene("main", function() {
     // Place grass at bottom of our world
     drawGrass();    
 
-    // draw drop zone
-    Crafty.e('jollyBoat').at(Game.map_grid.width / 2 - 3, Game.map_grid.height - 2).dim(6, 1);
+    // draw the jolly boat
+    Crafty.e('jollyBoat').at(Game.map_grid.width * Game.map_grid.tile.width / 2 - 3, Game.map_grid.height * Game.map_grid.tile.height - 70).dim(6, 1);
+    
+    // add extra randomly
+    setInterval(function()
+    {
+            Crafty.e('ExtraUp, RandomPosition, RandomAppearTime');
+    }, 4000);
 
     // the plane
     var plane = Crafty.e('Plane').at(0, 50).dim(200, 63);
@@ -103,54 +97,15 @@ Crafty.scene("main", function() {
 
     var shaker = Crafty.e("shaker");
 	
-	// generate random birds
-	for(var i = 0; i < 10; i++)
-	{
-		var bird = Crafty.e('Bird, RandomPosition');
-				bird.collision()
-					.onHit("ParatrooperSailOpened", function(e) {
-
-						//shaker.shaker(25);
-						
-						// birds falls to the ground
-						this.addComponent("Gravity").gravity("Floor");
-					})
-					.onHit("Grass", function(e) {
-						// birds falls to the ground
-						this.destroy();
-					});
-	}
-	
-	
-    // generate birds infinitly
-    var i = 0;
-    while(true) {
-
-		
-        var randTime = i * 2500;
-
-        setTimeout(function()
-        {
-            var bird = Crafty.e('Bird, RandomPositionOnX');
-				bird.collision()
-					.onHit("ParatrooperSailOpened", function(e) {
-
-						//shaker.shaker(25);
-						
-						// birds falls to the ground
-						this.addComponent("Gravity").gravity("Floor");
-					})
-					.onHit("Grass", function(e) {
-						// birds falls to the ground
-						this.destroy();
-					});
-
-        }, randTime);
-
-        if(i == 15) {
-            break;
-        }
-
-        ++i;
+    // generate random birds
+    for(var i = 0; i < 7; i++)
+    {
+        Crafty.e('Bird, RandomPosition');                   
     }
+
+    // generate birds infinitly
+    setInterval(function()
+    {
+        var bird = Crafty.e('Bird, RandomPositionOnX');
+    }, Crafty.math.randomInt(4000, 10000));
 });
