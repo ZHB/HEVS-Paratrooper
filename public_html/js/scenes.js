@@ -25,7 +25,7 @@ Crafty.scene("sce_loading", function() {
             spr_bird: [0,1]
         });
 
-        Crafty.sprite(42, 42, 'assets/spr_arrow.png', {
+        Crafty.sprite(100, 78, 'assets/spr_arrow.png', {
             spr_arrow: [0,1]
         });
 
@@ -85,12 +85,13 @@ Crafty.scene("main", function() {
     setInterval(function()
     {
             Crafty.e('ExtraUp, RandomPosition, RandomAppearTime');
-    }, 4000);
+    }, 1000);
 
     // the plane
     var plane = Crafty.e('Plane').at(0, 50).dim(200, 63);
     plane.bind("KeyDown", function(e) {
-        if(e.keyCode === 32) { // see http://craftyjs.com/api/Crafty-keys.html
+        if(e.keyCode === 32 && !Crafty.isPaused() && !Game.paratrooperHasJumped) { // see http://craftyjs.com/api/Crafty-keys.html
+            Game.paratrooperHasJumped = true; // prevent multiple paratrooper
             jump(plane);
         }
     });

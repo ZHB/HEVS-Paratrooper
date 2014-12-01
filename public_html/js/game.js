@@ -25,6 +25,8 @@ Game = {
     height: function() {
         return this.map_grid.height * this.map_grid.tile.height;
     },
+    
+    paratrooperHasJumped: false, // prevent multiple paratrooper
 
     // Initialize and start our game
     start: function() {
@@ -46,7 +48,7 @@ function drawGrass()
 {
     // Add grass fow the whole world width
     for (var x = 0; x < Game.map_grid.width; x++) {
-        Crafty.e('Grass').at(
+        Crafty.e('Water').at(
                     x, 
                     Game.map_grid.height - 1 // last tile
                 );
@@ -71,19 +73,24 @@ function drawClouds()
 
 
 function jump(plane) 
-{   
+{       
     var plane_width = plane._w;
     var plane_position = plane._x;
     
     // jump from the middle of the plane
     parachute = Crafty.e('ParatrooperSailClosed').at(plane_position + plane_width / 2, 70);
+    
+    // open the sail after 0.8 sec
     parachute.delay(function() {
             // destroy the paratrooper before creating the new one with the parachute
             this.destroy();
             
             // add the paratrooper with opened sail
-            var paraSailOpened = Crafty.e('ParatrooperSailOpened').at(parachute._x, parachute._y);
+            var paratrooperBody = Crafty.e('ParatrooperBody').at(parachute._x, parachute._y);
+            var ParatrooperSail = Crafty.e('ParatrooperSail').at(parachute._x - 60 , parachute._y - 120);
 
+            
+            paratrooperBody.attach(ParatrooperSail);
                 
             //Crafty.viewport.follow(paraSailOpened, 0, 0);
         }, 800, 0);

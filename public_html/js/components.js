@@ -79,7 +79,7 @@ Crafty.c('Floor', {
 });
 
 // A Tree is just an Actor with a certain color/image
-Crafty.c('Grass', {
+Crafty.c('Water', {
     init: function() {
         this.requires('2D, Canvas, GridAlignment, Image')
         .image("./images/grass.jpg");
@@ -165,8 +165,8 @@ Crafty.c('Plane', {
  */
 Crafty.c('ParatrooperSailClosed', {
     init: function() {
-        this.requires('2D, Canvas, PixelAlignment, Color, Gravity, Delay')
-        .color('#ff0000')
+        this.requires('2D, Canvas, PixelAlignment, Image, Gravity, Delay')
+        .image("./assets/paratrooperBody.png")
         .gravityConst(0.1)
         .gravity("Floor");
     }
@@ -174,20 +174,31 @@ Crafty.c('ParatrooperSailClosed', {
 
 // paratroopersailopen.png
 
-Crafty.c('ParatrooperSailOpened', {
+Crafty.c('ParatrooperSail', {
     init: function() {
-        this.requires('2D, Canvas, PixelAlignment, Multiway, Image, Gravity, Delay, Collision')
-        .image("./assets/paratroopersailopen.png")
+        this.requires('2D, Canvas, PixelAlignment, Image')
+        .image("./assets/paratrooperSail.png");
+    }
+});
+
+
+
+Crafty.c('ParatrooperBody', {
+    init: function() {
+        this.requires('2D, Canvas, PixelAlignment, Multiway, Image, Gravity, Delay, Collision, Tween')
+        .image("./assets/paratrooperBody.png")
+        .dim(42, 40)
         .gravityConst(0.0008)
         .gravity("Floor")
 		// open parachute after cerain delay
         .delay(function() {
             // add possibility to move the paratrooper after it has opened his sail
-            this.multiway(1, {DOWN_ARROW: 90, RIGHT_ARROW: 0, LEFT_ARROW: 180});
+            this.multiway(1.3, {DOWN_ARROW: 90, RIGHT_ARROW: 0, LEFT_ARROW: 180}); // speed, directions
         }, 600, 0)
         .collision()
-        .onHit("Grass", function(e) {
-                alert('You loose');
+        .onHit("Water", function(e) {
+            
+            //this.particles(options);
         })
         .onHit("jollyBoat", function(e) {
 
@@ -197,8 +208,18 @@ Crafty.c('ParatrooperSailOpened', {
                 Crafty.scene("score");
         })
         .onHit("ExtraUp", function(e) {
-                this.y = this._y - 200;
-                
+               this.tween({rotation: 360, y: this._y - 100}, 400);
+        })
+        .bind('KeyDown', function(e) {
+            if(e.key == Crafty.keys.LEFT_ARROW) {
+                this.rotation = -10;
+            } else if (e.key == Crafty.keys.RIGHT_ARROW) {
+                this.rotation = 10;
+            } else if (e.key == Crafty.keys.UP_ARROW) {
+                this.rotation = 0;
+            } else if (e.key == Crafty.keys.DOWN_ARROW) {
+                this.rotation = 0;
+            }
         });
     }
 });
@@ -230,14 +251,14 @@ Crafty.c('Bird', {
             }
         })
         .collision()
-        .onHit("ParatrooperSailOpened", function(e) {
+        .onHit("ParatrooperBody", function(e) {
 
                 //shaker.shaker(25);
 
                 // birds falls to the ground
                 this.addComponent("Gravity").gravity("Floor");
         })
-        .onHit("Grass", function(e) {
+        .onHit("Water", function(e) {
                 // birds falls to the ground
                 this.destroy();
         }) 
@@ -303,7 +324,7 @@ Crafty.c('ExtraUp', {
         this.requires('2D, Canvas, GridAlignment, Image, SpriteAnimation, spr_arrow')
         .dim(2,2)
         .attr({'z':100})
-        .reel('ArrowUp', 800, 0, 3, 3) // time between changes, colums, row, number
+        .reel('ArrowUp', 1000, 0, 0, 3) // time between changes, colums, row, number
         .animate('ArrowUp', -1); // -1 : infinite animation
         //.image("./assets/islandLeft.png");
     }
