@@ -188,14 +188,20 @@ Crafty.c('ParatrooperBody', {
         this.requires('2D, Canvas, PixelAlignment, Multiway, Image, Gravity, Delay, Collision, Tween')
         .image("./assets/paratrooperBody.png")
         .dim(42, 40)
-        .gravityConst(0.0008)
-        .gravity("Floor")
-		// open parachute after cerain delay
+        //.gravityConst(0.0008)
+        //.gravity("Floor")
+	// open parachute after cerain delay
         .delay(function() {
             // add possibility to move the paratrooper after it has opened his sail
             this.multiway(1.3, {DOWN_ARROW: 90, RIGHT_ARROW: 0, LEFT_ARROW: 180}); // speed, directions
         }, 600, 0)
         .collision()
+        .bind("EnterFrame", function(e) {
+
+            // Custom gravity
+            this.y = this._y + 0.2;
+
+        })
         .onHit("Water", function(e) {
             
             //this.particles(options);
@@ -208,16 +214,33 @@ Crafty.c('ParatrooperBody', {
                 Crafty.scene("score");
         })
         .onHit("ExtraUp", function(e) {
-               this.tween({rotation: 360, y: this._y - 100}, 400);
+            //this.antigravity();
+            //this.gravityConst(0.0008);
+            //this.gravity();
+            //$('.nbrThermiques').val(5); 
+            var inputScore = $('.nbrThermiques');
+            inputScore.val(parseInt(inputScore.val(), 10) + 1);
+    
+            this.tween({rotation: 360, y: this._y - 130}, 400);
+        })
+        .onHit("Egg", function(e) {
+            //this.antigravity();
+            //this.gravityConst(0.0008);
+            //this.gravity();
+            //$('.nbrThermiques').val(5); 
+            var inputScore = $('.nbrOeufsRecuperes');
+            inputScore.val(parseInt(inputScore.val(), 10) + 1);
+    
+            this.tween({rotation: 360, y: this._y - 130}, 400);
         })
         .bind('KeyDown', function(e) {
-            if(e.key == Crafty.keys.LEFT_ARROW) {
+            if(e.key === Crafty.keys.LEFT_ARROW) {
                 this.rotation = -10;
-            } else if (e.key == Crafty.keys.RIGHT_ARROW) {
+            } else if (e.key === Crafty.keys.RIGHT_ARROW) {
                 this.rotation = 10;
-            } else if (e.key == Crafty.keys.UP_ARROW) {
+            } else if (e.key === Crafty.keys.UP_ARROW) {
                 this.rotation = 0;
-            } else if (e.key == Crafty.keys.DOWN_ARROW) {
+            } else if (e.key === Crafty.keys.DOWN_ARROW) {
                 this.rotation = 0;
             }
         });
@@ -232,12 +255,14 @@ Crafty.c('Invisible', {
 });
 
 
+// new egg randomly
+        
 // Create our player entity with some premade components
 Crafty.c('Bird', {
     dir: 'e',
     speed: 0.35,
     init: function() {
-        this.requires('2D, DOM, PixelAlignment, Animate, Collision, SpriteAnimation, spr_bird')
+        this.requires('2D, DOM, PixelAlignment, Animate, Collision, SpriteAnimation, spr_bird, Delay')
         //.image("./images/bird.jpg")
         .bind("EnterFrame", function(e) { // event trigered when whe enter the frame : https://github.com/craftyjs/Crafty/wiki/Event-List
             
@@ -262,6 +287,11 @@ Crafty.c('Bird', {
                 // birds falls to the ground
                 this.destroy();
         }) 
+        .delay(function() {
+             
+            var egg = Crafty.e('Egg');
+                egg.at(this._x, this._y);
+         }, Crafty.math.randomInt(10000, 50000), 7)
          // These next lines define our four animations
         // each call to .animate specifies:
         // - the name of the animation
@@ -326,6 +356,20 @@ Crafty.c('ExtraUp', {
         .attr({'z':100})
         .reel('ArrowUp', 1000, 0, 0, 3) // time between changes, colums, row, number
         .animate('ArrowUp', -1); // -1 : infinite animation
-        //.image("./assets/islandLeft.png");
+    }
+});
+
+Crafty.c('Egg', {
+    init: function() {
+        this.requires('2D, Canvas, PixelAlignment, Image')
+        .dim(24,28)
+        .attr({'z':110})
+        .image("./assets/chick.png")
+        .bind("EnterFrame", function(e) {
+
+            // Custom gravity
+            this.y = this._y + 0.6;
+
+        });
     }
 });

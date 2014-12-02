@@ -91,6 +91,7 @@ function jump(plane)
 
             
             paratrooperBody.attach(ParatrooperSail);
+            
                 
             //Crafty.viewport.follow(paraSailOpened, 0, 0);
         }, 800, 0);

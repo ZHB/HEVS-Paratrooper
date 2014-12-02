@@ -7,7 +7,7 @@
  <style>
     body, html { margin:0; padding: 0; font-family:Arial; font-size:20px; }
     
-    #cr-stage { margin:0px auto; border:3px solid #000;}
+    #cr-stage { margin:0px auto; border:3px solid #000; border-top:none;}
     
     #game-container { border:5px solid #000; color:#fff;}
     #main-container {
@@ -15,27 +15,77 @@
         width: 1800px;
         background:#000;
         border: 3px solid #000;
-        
+        border-bottom:none;
     }
-    #scores {
+    #game-info {
         color: #fff;
         padding: 5px 10px;
         border:3px solid #000;
+        
+    }    
+    #game-info ul {
+        list-style:none;
+        margin:0;
     }
-    #cr-stage:hover .controls {
-        display:block;
+    #game-info ul li {
+        display:inline-block;
+        margin-left: 13px;
+    }
+    .scores {
+        float:left;
+        width:80%;
+    }
+    .scores p {
+        line-height: 50px;
+        margin: 0;
+    }
+    .controls {
+        float: right;
+    }
+    .btn {
+        border: medium none;
+        height: 50px;
+        text-indent: -999999px;
+        width: 50px;
+        cursor:pointer;
+    }
+    .btn-pause {
+        background: url("./assets/pause.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+    }
+    .btn-play {
+        background: url("./assets/play.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+    }
+    .btn-mute {
+        background: url("./assets/volume-off.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+    }
+    .btn-unmute {
+        background: url("./assets/volume-on.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+    }
+    .clearfix {
+        clear:both;
+    }
+    input {
+        background: none;
+        color: #fff;
+        border: none;
+        font-size: 18px;
+        width: 30px;
     }
   </style>
 </head>
 <body>
     <div id="main-container">
-        <div id="scores">
-            <p>Scores : <span class="scoreTotal">0</span> oeufs récupérés <span class="nbrOeufsRecuperes"></span> oeufs sauvé <span class="nbrOeufsSauves"></span></p>
+        <div id="game-info">
+            <div class="scores">
+                <p>SCORE : <input type="text" class="nbrOeufsRecuperes" value="0" /> oeufs récupérés, <span class="nbrOeufsSauves">0</span> oeufs sauvé , <input type="text" class="nbrThermiques" value="0" /> courants ascendants => total <span class="scoreTotal">0</span></p>
+            </div>
             <div class="controls">
                 <ul>
-                    <li><button class="btn-pause">Pause</button></li>
+                    <li><button class="btn btn-pause">Pause</button></li>
+                    <!--<li><button class="btn btn-mute">Mute</button></li>-->
                 </ul>
             </div>
+            <div class="clearfix"></div>
         </div>
         <div id="game-container"></div>
     </div>
@@ -58,13 +108,39 @@
             
             $('.controls :button').blur();
             if(!Crafty.isPaused()) {
+                $('.btn-pause').addClass('btn-play');
+                $('.btn-pause').removeClass('btn-pause');
+                
+                
                 Crafty.pause();
                 Crafty.audio.pause('planeflyingover');
             } else {
+                $('.btn-play').addClass('btn-pause');
+                $('.btn-play').removeClass('btn-play');
+                
                 Crafty.pause();
                 Crafty.audio.unpause('planeflyingover');
             }
         });
+        
+        /*
+        $('.btn-mute').click(function() {
+            if(Crafty.audio.isPlaying('planeflyingover')) {
+                alert('oui');
+                $('.btn-mute').addClass('btn-unmute');
+                $('.btn-mute').removeClass('btn-mute');
+                
+                
+                Crafty.audio.mute();
+            } else {
+                alert('non');
+                $('.btn-mute').addClass('btn-mute');
+                $('.btn-mute').removeClass('btn-unmute');
+                
+                Crafty.audio.unmute();
+            } 
+        });
+        */
     </script>
 	
 </body>

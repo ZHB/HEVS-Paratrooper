@@ -83,10 +83,21 @@ Crafty.scene("main", function() {
     
     // add extra randomly
     setInterval(function()
-    {
+    {   
+        if(!Crafty.isPaused()) {
             Crafty.e('ExtraUp, RandomPosition, RandomAppearTime');
-    }, 1000);
+        }
+    }, 2000);
 
+    // add eggs randomly
+    /*
+    setInterval(function()
+    {   
+        if(!Crafty.isPaused()) {
+            Crafty.e('Egg, RandomPositionFromTop');
+        }
+    }, 5000);*/
+    
     // the plane
     var plane = Crafty.e('Plane').at(0, 50).dim(200, 63);
     plane.bind("KeyDown", function(e) {
@@ -99,14 +110,14 @@ Crafty.scene("main", function() {
     var shaker = Crafty.e("shaker");
 	
     // generate random birds
-    for(var i = 0; i < 7; i++)
+    for(var i = 0; i < 5; i++)
     {
-        Crafty.e('Bird, RandomPosition');                   
+        Crafty.e('Bird, RandomPosition');  
     }
 
     // generate birds infinitly
     setInterval(function()
     {
-        var bird = Crafty.e('Bird, RandomPositionOnX');
-    }, Crafty.math.randomInt(4000, 10000));
+        Crafty.e('Bird, RandomPositionOnX');        
+    }, Crafty.math.randomInt(3000, 20000));
 });
