@@ -12,7 +12,7 @@
     #game-container { border:5px solid #000; color:#fff;}
     #main-container {
         margin: 0 auto;
-        width: 1800px;
+        width: 1500px;
         background:#000;
         border: 3px solid #000;
         border-bottom:none;
@@ -58,7 +58,7 @@
     .btn-mute {
         background: url("./assets/volume-off.png") no-repeat scroll center center rgba(0, 0, 0, 0);
     }
-    .btn-unmute {
+    .btn-mute.inactive {
         background: url("./assets/volume-on.png") no-repeat scroll center center rgba(0, 0, 0, 0);
     }
     .clearfix {
@@ -77,12 +77,12 @@
     <div id="main-container">
         <div id="game-info">
             <div class="scores">
-                <p>SCORE : <input type="text" class="nbrOeufsRecuperes" value="0" /> oeufs récupérés, <span class="nbrOeufsSauves">0</span> oeufs sauvé , <input type="text" class="nbrThermiques" value="0" /> courants ascendants => total <span class="scoreTotal">0</span></p>
+                <p>SCORE : <input type="text" class="nbrOeufsRecuperes" value="0" /> oeufs récupérés, <input type="text" class="nbrThermiques" value="0" /> courants ascendants => total <input type="text" class="scoreTotal" value="0" /></p>
             </div>
             <div class="controls">
                 <ul>
                     <li><button class="btn btn-pause">Pause</button></li>
-                    <!--<li><button class="btn btn-mute">Mute</button></li>-->
+                    <li><button class="btn btn-mute">Mute</button></li>
                 </ul>
             </div>
             <div class="clearfix"></div>
@@ -94,6 +94,7 @@
     <script src="./js/components.js"></script>
     <script src="./js/scenes.js"></script>
     <script src="./js/trajectory.js"></script>
+    <script src="./js/scores.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>window.addEventListener('load', Game.start());</script>
     <script>
@@ -123,24 +124,18 @@
             }
         });
         
-        /*
+        
         $('.btn-mute').click(function() {
-            if(Crafty.audio.isPlaying('planeflyingover')) {
-                alert('oui');
-                $('.btn-mute').addClass('btn-unmute');
-                $('.btn-mute').removeClass('btn-mute');
-                
-                
-                Crafty.audio.mute();
+            
+            
+            Crafty.audio.toggleMute();
+            if($('.btn-mute').hasClass('inactive')) {
+                $('.btn-mute').removeClass('inactive');
             } else {
-                alert('non');
-                $('.btn-mute').addClass('btn-mute');
-                $('.btn-mute').removeClass('btn-unmute');
-                
-                Crafty.audio.unmute();
+                $('.btn-mute').addClass('inactive');
             } 
         });
-        */
+        
     </script>
 	
 </body>

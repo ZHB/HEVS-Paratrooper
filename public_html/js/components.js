@@ -102,7 +102,7 @@ Crafty.c('LeftIsland', {
 
 Crafty.c('jollyBoat', {
     dir: 'e',
-    speed: 2,
+    speed: 3,
     init: function() {
         this.requires('2D, Canvas, PixelAlignment, Collision, Image')
         .image("./assets/jollyBoat.png")
@@ -123,9 +123,10 @@ Crafty.c('jollyBoat', {
 
 Crafty.c('Cloud', {
     init: function() {
-        this.requires('2D, DOM, Canvas, PixelAlignment, Image')
+        this.requires('2D, DOM, Canvas, PixelAlignment, Image, Color')
         .attr({'z':5})
-        .image("./images/cloud.png");
+        .dim(369, 165)
+        .image("./assets/nuage3.png");
     }
 });
 
@@ -181,30 +182,23 @@ Crafty.c('ParatrooperSail', {
     }
 });
 
-
-
 Crafty.c('ParatrooperBody', {
     init: function() {
         this.requires('2D, Canvas, PixelAlignment, Multiway, Image, Gravity, Delay, Collision, Tween')
         .image("./assets/paratrooperBody.png")
         .dim(42, 40)
-        //.gravityConst(0.0008)
-        //.gravity("Floor")
-	// open parachute after cerain delay
+		// open parachute after cerain delay
         .delay(function() {
             // add possibility to move the paratrooper after it has opened his sail
             this.multiway(1.3, {DOWN_ARROW: 90, RIGHT_ARROW: 0, LEFT_ARROW: 180}); // speed, directions
         }, 600, 0)
         .collision()
         .bind("EnterFrame", function(e) {
-
-            // Custom gravity
-            this.y = this._y + 0.2;
-
+            this.y = this._y + 0.2; // custom gravity
         })
         .onHit("Water", function(e) {
+            alert('dsdfsd');
             
-            //this.particles(options);
         })
         .onHit("jollyBoat", function(e) {
 
@@ -214,24 +208,20 @@ Crafty.c('ParatrooperBody', {
                 Crafty.scene("score");
         })
         .onHit("ExtraUp", function(e) {
-            //this.antigravity();
-            //this.gravityConst(0.0008);
-            //this.gravity();
-            //$('.nbrThermiques').val(5); 
-            var inputScore = $('.nbrThermiques');
-            inputScore.val(parseInt(inputScore.val(), 10) + 1);
-    
-            this.tween({rotation: 360, y: this._y - 130}, 400);
+            e[0].obj.destroy();
+            this.tween({rotation: 360, y: this._y - Crafty.math.randomInt(100, 200)}, 400);
+        }, function(e) {
+           updateScores(1, 0, 0);
+        })
+        .onHit("Bird", function(e) {
+            //e[0].obj.destroy();
+        }, function(e) { // callback after hit
+            updateScores(0, 0, -3);
         })
         .onHit("Egg", function(e) {
-            //this.antigravity();
-            //this.gravityConst(0.0008);
-            //this.gravity();
-            //$('.nbrThermiques').val(5); 
-            var inputScore = $('.nbrOeufsRecuperes');
-            inputScore.val(parseInt(inputScore.val(), 10) + 1);
-    
-            this.tween({rotation: 360, y: this._y - 130}, 400);
+            e[0].obj.destroy();
+        }, function(e) { // callback after hit
+            updateScores(0, 1, 0);
         })
         .bind('KeyDown', function(e) {
             if(e.key === Crafty.keys.LEFT_ARROW) {
@@ -291,7 +281,7 @@ Crafty.c('Bird', {
              
             var egg = Crafty.e('Egg');
                 egg.at(this._x, this._y);
-         }, Crafty.math.randomInt(10000, 50000), 7)
+         }, Crafty.math.randomInt(5000, 50000), 7)
          // These next lines define our four animations
         // each call to .animate specifies:
         // - the name of the animation
@@ -351,7 +341,7 @@ Crafty.c("shaker", {
 
 Crafty.c('ExtraUp', {
     init: function() {
-        this.requires('2D, Canvas, GridAlignment, Image, SpriteAnimation, spr_arrow')
+        this.requires('2D, Canvas, GridAlignment, Image, SpriteAnimation, spr_arrow, RandomPosition, RandomAppearTime')
         .dim(2,2)
         .attr({'z':100})
         .reel('ArrowUp', 1000, 0, 0, 3) // time between changes, colums, row, number
@@ -361,15 +351,16 @@ Crafty.c('ExtraUp', {
 
 Crafty.c('Egg', {
     init: function() {
-        this.requires('2D, Canvas, PixelAlignment, Image')
-        .dim(24,28)
+        this.requires('2D, Canvas, PixelAlignment, Image, SpriteAnimation, spr_egg, Delay')
+        .dim(32,32)
         .attr({'z':110})
-        .image("./assets/chick.png")
+		//.image("./assets/chick.png")
+        .reel('EggFalling', 1000, 0, 0, 4) // time between changes, colums, row, number
+        .animate('EggFalling', 1) // animate only once, then stop
         .bind("EnterFrame", function(e) {
 
             // Custom gravity
-            this.y = this._y + 0.6;
-
+            this.y = this._y + 0.75;
         });
     }
 });

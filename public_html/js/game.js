@@ -6,7 +6,7 @@
 Game = {
      // This defines our grid's size and the size of each of its tiles
     map_grid: {
-            width: 90,
+            width: 75,
             height: 38,
         tile: {
             width: 20,
@@ -35,6 +35,9 @@ Game = {
 
         // call our loading scene
         Crafty.scene("sce_loading");
+        
+        
+        $('#game-info input').val(0);
     }
 }
 
@@ -62,12 +65,12 @@ function drawGrass()
  */
 function drawClouds() 
 {
-    var number = Crafty.math.randomInt(1, 3);
+    //var number = Crafty.math.randomInt(1, 3);
     
-    for(var i = 0; i < number; i++) 
-    {
-        Crafty.e('Cloud').at(Crafty.math.randomInt(0, Game.map_grid.width * Game.map_grid.tile.width),  Crafty.math.randomInt(100, 400)).dim(384, 98);
-    }
+    //for(var i = 0; i < number; i++) 
+    //{
+        Crafty.e('Cloud').at(Crafty.math.randomInt(0, Game.map_grid.width * Game.map_grid.tile.width),  Crafty.math.randomInt(100, 400));
+    //}
     
 }
 

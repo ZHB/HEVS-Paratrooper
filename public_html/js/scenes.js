@@ -1,42 +1,50 @@
 // spashscreen
 Crafty.scene("sce_loading", function() {
     Crafty.background("#111");
-   
+    
+    Crafty.paths({ audio: "./sounds/", images: "./assets/", sprites: "./assets/" });
+    
+    // assets to load
+    var assetsObj = {
+        "audio": {
+            "planeflyingover": ["plane-flying-over.mp3"]
+        },
+        "images": ["loading.png", "nuage3.png"],
+        "sprites": {
+            "spr_bird.png": {
+                "tile": 40,
+                "tileh": 40,
+                "map": { "spr_bird": [0,1] }
+            },
+            "spr_arrow.png": {
+                "tile": 100,
+                "tileh": 78,
+                "map": { "spr_arrow": [0,1] }
+            },
+            "spr_egg.png": {
+                "tile": 32,
+                "tileh": 32,
+                "map": { "spr_egg": [0,1] }
+            }
+        }
+    };
 
-     // Load our sprite map image
-    Crafty.load(['./assets/16x16_forest_1.gif', './assets/loading.png', './assets/hunter.png', './assets/spr_bird.png', './assets/spr_arrow.png', './sounds/plane-flying-over.mp3'], function(){
-        // Once the image is loaded...
-
-        Crafty.audio.add({
-                planeflyingover: [
-                        "./sounds/plane-flying-over.mp3",
-                ],
-        });
-        
-        Crafty.sprite("./assets/loading.png", {
-            spr_loading: [0,0, 430, 396]
-        });
-        
-
-		
-        // Define the PC's sprite to be the first sprite in the third row of the
-        // animation sprite map
-        Crafty.sprite(40, 40, 'assets/spr_bird.png', {
-            spr_bird: [0,1]
-        });
-
-        Crafty.sprite(100, 78, 'assets/spr_arrow.png', {
-            spr_arrow: [0,1]
-        });
-
-        // Now that our sprites are ready to draw, start the game on click
-        // 215 is half sprite size
-        Crafty.e("2D, DOM, spr_loading, Mouse").attr({x: Crafty.viewport.width / 2 - 215}).bind("Click", function(e) {
-            Crafty.scene("main");
-        });
-        
-        
-    });
+    // Load our sprite map image
+    Crafty.load(assetsObj, function(){
+        Crafty.e('2D, Canvas, Mouse, Image')
+            .attr({x: Crafty.viewport.width / 2 - 215})
+            .image("./assets/loading.png")
+            .bind('Click', function(MouseEvent){
+                Crafty.scene("main");
+            });
+    },
+    function() {
+        console.log("Loading assets");
+    },
+    function() {
+        console.log("Error loading assets");
+    }
+    );
 }); 
 
 // score screen
@@ -58,7 +66,7 @@ Crafty.scene("score", function() {
 // Game screen
 Crafty.scene("main", function() {
     //Crafty.background('SkyBlue');
-    //Crafty.background('url("./images/game-bg.png") no-repeat center bottom / cover #81d4fa');
+    //Crafty.background('url("./assets/header-bg.png") no-repeat center top #7dcfff');
     Crafty.background('#81d4fa');
 	
     /* ############################ [loading scene assets] ############################ */
@@ -72,31 +80,30 @@ Crafty.scene("main", function() {
     
     Crafty.e('Floor');
 
-
+    
     drawClouds();
 
+    
     // Place grass at bottom of our world
     drawGrass();    
+    
+    
 
     // draw the jolly boat
     Crafty.e('jollyBoat').at(Game.map_grid.width * Game.map_grid.tile.width / 2 - 3, Game.map_grid.height * Game.map_grid.tile.height - 70).dim(6, 1);
+    
     
     // add extra randomly
     setInterval(function()
     {   
         if(!Crafty.isPaused()) {
-            Crafty.e('ExtraUp, RandomPosition, RandomAppearTime');
+            Crafty.e('ExtraUp');
         }
     }, 2000);
+    
+    
 
-    // add eggs randomly
-    /*
-    setInterval(function()
-    {   
-        if(!Crafty.isPaused()) {
-            Crafty.e('Egg, RandomPositionFromTop');
-        }
-    }, 5000);*/
+    
     
     // the plane
     var plane = Crafty.e('Plane').at(0, 50).dim(200, 63);
@@ -106,6 +113,8 @@ Crafty.scene("main", function() {
             jump(plane);
         }
     });
+    
+    
 
     var shaker = Crafty.e("shaker");
 	
@@ -120,4 +129,6 @@ Crafty.scene("main", function() {
     {
         Crafty.e('Bird, RandomPositionOnX');        
     }, Crafty.math.randomInt(3000, 20000));
+    
+    
 });
