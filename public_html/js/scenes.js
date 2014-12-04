@@ -82,7 +82,7 @@ Crafty.scene("main", function() {
     
     // Right island
     Crafty.e('RightIsland').at(Game.map_grid.width - 20, Game.map_grid.height - 11).dim(14, 12);
-    Crafty.e('LeftIsland').at(0, Game.map_grid.height - 11).dim(15, 13);
+    Crafty.e('LeftIsland').at(0, Game.map_grid.height - 8).dim(15, 13);
     
 	
         
