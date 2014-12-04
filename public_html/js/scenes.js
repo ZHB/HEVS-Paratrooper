@@ -9,7 +9,7 @@ Crafty.scene("sce_loading", function() {
         "audio": {
             "planeflyingover": ["plane-flying-over.mp3"]
         },
-        "images": ["loading.png", "nuage3.png"],
+        "images": ["loading.png", "nuage3.png", "water.jpg", "boatnest.jpg"],
         "sprites": {
             "spr_bird.png": {
                 "tile": 40,
@@ -17,8 +17,8 @@ Crafty.scene("sce_loading", function() {
                 "map": { "spr_bird": [0,1] }
             },
             "spr_arrow.png": {
-                "tile": 100,
-                "tileh": 78,
+                "tile": 50,
+                "tileh": 45,
                 "map": { "spr_arrow": [0,1] }
             },
             "spr_egg.png": {
@@ -49,10 +49,19 @@ Crafty.scene("sce_loading", function() {
 
 // score screen
 Crafty.scene("score", function() {
-    /*
-     * TODO:
-     *  - Afficher les résultats de la position par rapport à la cible
-     */
+        
+        
+        
+    
+    Crafty.background('#111');    
+        
+    Crafty.e("2D, DOM, Text")
+            .attr({ x: Crafty.viewport.width / 2 - 215, y: 100 })
+            .textFont({ size: '65px', weight: 'bold', width: '100%' })
+            .text("Game Over")
+            .textColor('#ffffff');
+    
+    //Crafty.stop(true);
 }); 
 
 
@@ -90,7 +99,7 @@ Crafty.scene("main", function() {
     
 
     // draw the jolly boat
-    Crafty.e('jollyBoat').at(Game.map_grid.width * Game.map_grid.tile.width / 2 - 3, Game.map_grid.height * Game.map_grid.tile.height - 70).dim(6, 1);
+    Crafty.e('jollyBoat').at(Game.map_grid.width * Game.map_grid.tile.width / 2 - 3, Game.map_grid.height * Game.map_grid.tile.height - 80);
     
     
     // add extra randomly
@@ -116,18 +125,19 @@ Crafty.scene("main", function() {
     
     
 
-    var shaker = Crafty.e("shaker");
 	
     // generate random birds
     for(var i = 0; i < 5; i++)
     {
-        Crafty.e('Bird, RandomPosition');  
+        var bird = Crafty.e('Bird, RandomPosition');  
+        bird.speed = Crafty.math.randomInt(2, 8) / 10;
     }
 
     // generate birds infinitly
     setInterval(function()
     {
-        Crafty.e('Bird, RandomPositionOnX');        
+        var birdFromLeft = Crafty.e('Bird, RandomPositionOnX'); 
+        birdFromLeft.speed = Crafty.math.randomInt(2, 8) / 10;
     }, Crafty.math.randomInt(3000, 20000));
     
     

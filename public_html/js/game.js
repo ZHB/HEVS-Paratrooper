@@ -52,9 +52,9 @@ function drawGrass()
     // Add grass fow the whole world width
     for (var x = 0; x < Game.map_grid.width; x++) {
         Crafty.e('Water').at(
-                    x, 
-                    Game.map_grid.height - 1 // last tile
-                );
+            x, 
+            Game.map_grid.height - 1 // last tile
+        );
     }
 }
 
@@ -65,12 +65,12 @@ function drawGrass()
  */
 function drawClouds() 
 {
-    //var number = Crafty.math.randomInt(1, 3);
+    var number = Crafty.math.randomInt(1, 5);
     
-    //for(var i = 0; i < number; i++) 
-    //{
+    for(var i = 0; i < number; i++) 
+    {
         Crafty.e('Cloud').at(Crafty.math.randomInt(0, Game.map_grid.width * Game.map_grid.tile.width),  Crafty.math.randomInt(100, 400));
-    //}
+    }
     
 }
 
