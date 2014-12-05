@@ -13,6 +13,16 @@ Game = {
             height: 20
         }
     },
+    map_bounds: {
+        min: {
+            x: -500,
+            y: 0
+        },
+        max: {
+            x: 2000,
+            y:900
+        }
+    },
     
     // The total width of the game screen. Since our grid takes up the entire screen
     // this is just the width of a tile times the width of the grid
@@ -69,11 +79,11 @@ function drawGrass()
  */
 function drawClouds() 
 {
-    var number = Crafty.math.randomInt(1, 5);
+    var number = Crafty.math.randomInt(2, 7);
     
     for(var i = 0; i < number; i++) 
     {
-        Crafty.e('Cloud').at(Crafty.math.randomInt(0, Game.map_grid.width * Game.map_grid.tile.width),  Crafty.math.randomInt(100, 400));
+        Crafty.e('Cloud').at(Crafty.math.randomInt(Game.map_bounds.min.x, Game.map_bounds.max.x),  Crafty.math.randomInt(100, 400));
     }
     
 }

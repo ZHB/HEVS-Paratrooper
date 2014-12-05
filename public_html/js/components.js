@@ -92,7 +92,7 @@ Crafty.c('Water', {
 Crafty.c('RightIsland', {
     init: function() {
         this.requires('2D, Canvas, GridAlignment, Image, Collision')
-        .attr({'z':500})
+        .attr({'z':200})
         .collision([15,209], [17,203], [43,180], [68,166], [97,152], [88,134], [67,144], [53,132], [45,97], [118,71], [150,97], [158,64], [137,43], [165,2], [266,11], [269,56], [258,74], [229,75], [224,127], [214,155], [231,164], [254,189], [263,211])
         .image("./assets/island.png");
     }
@@ -100,18 +100,20 @@ Crafty.c('RightIsland', {
 Crafty.c('LeftIsland', {
     init: function() {
         this.requires('2D, Canvas, GridAlignment, Image, Collision')
-        .attr({'z':500})
+        .attr({'z':200})
         .image("./assets/islandLeft.png");
     }
 });
 
 Crafty.c('jollyBoat', {
-    dir: 'e',
+    dir: 'w',
     speed: 3,
     init: function() {
-        this.requires('2D, Canvas, PixelAlignment, Collision, Image')
-        .image("./assets/boatnest.png")
-        .attr({'z':50})
+        this.requires('2D, Canvas, PixelAlignment, Collision, Image, SpriteAnimation, spr_jollyboat')
+        //.image("./assets/boatnest.png")
+        .attr({'z':300})
+        .reel('JollyBoatSpr', 800, 0, 0, 2) // time between changes, colums, row, number
+        .animate('JollyBoatSpr', -1) // -1 : infinite animation
         .bind("EnterFrame", function(e) { // event trigered when whe enter the frame : https://github.com/craftyjs/Crafty/wiki/Event-List
             
             // move the plane in the right direction
@@ -119,10 +121,14 @@ Crafty.c('jollyBoat', {
         })
         .collision([2,5], [5,9], [20,14], [39,19], [68,22], [107,22], [128,21], [147,17], [165,14], [172,11],[179,6], [176,32], [169,46], [166,50], [157,56], [25,56], [15,50], [10,43])
         .onHit("RightIsland", function(e) {
-                this.dir = 'w';
+            this.unflip("X");
+            this.shift(-5, 20, 0, 0);
+            this.dir = 'w';
         })
         .onHit("LeftIsland", function(e) {
-                this.dir = 'e';
+            this.flip("X");
+            this.shift(5, -20, 0, 0);
+            this.dir = 'e';
         })
     }
 });
@@ -266,17 +272,13 @@ Crafty.c('Invisible', {
     }
 });
 
-
-
-// new egg randomly
-        
-// Create our player entity with some premade components
+/*
 Crafty.c('Bird', {
     dir: 'e',
     speed: 0.35,
     init: function() {
-        this.requires('2D, DOM, PixelAlignment, Animate, Collision, SpriteAnimation, spr_bird, Delay')
-        //.image("./images/bird.jpg")
+        this.requires('2D, Canvas, PixelAlignment, Color')
+        .color('#ff0000')
         .bind("EnterFrame", function(e) { // event trigered when whe enter the frame : https://github.com/craftyjs/Crafty/wiki/Event-List
             
             //this.animate('PlayerMovingRight', 8, -1);
@@ -285,6 +287,33 @@ Crafty.c('Bird', {
             this.move(this.dir, this.speed);
             
             if(this.x > Game.map_grid.width * Game.map_grid.tile.width || this.x < 0  || this.y >= Game.map_grid.height * Game.map_grid.tile.height - 2 * Game.map_grid.tile.height ) { 
+                this.destroy();
+            }
+        });
+        //.attr({'x':-300, 'y':50});
+    }
+});*/
+
+
+
+// new egg randomly
+        
+// Create our player entity with some premade components
+
+Crafty.c('Bird', {
+    dir: 'e',
+    speed: 0.35,
+    init: function() {
+        this.requires('2D, DOM, PixelAlignment, Animate, Collision, SpriteAnimation, spr_bird, Delay')
+        .attr({'z':100})
+        .bind("EnterFrame", function(e) { // event trigered when whe enter the frame : https://github.com/craftyjs/Crafty/wiki/Event-List
+            
+            //this.animate('PlayerMovingRight', 8, -1);
+            
+            // move the plane in the right direction
+            this.move(this.dir, this.speed);
+            
+            if(this.x > Game.map_bounds.max.x  || this.y >= Game.map_bounds.max.y ) { 
                 this.destroy();
             }
         })
@@ -313,9 +342,10 @@ Crafty.c('Bird', {
     }
 });
 
+
 Crafty.c('ExtraUp', {
     init: function() {
-        this.requires('2D, Canvas, PixelAlignment, Image, SpriteAnimation, spr_arrow, RandPosTherm, RandomAppearTime, Collision')
+        this.requires('2D, Canvas, PixelAlignment, SpriteAnimation, spr_arrow, RandPosTherm, RandomAppearTime, Collision')
         //.dim(50,45)
         .collision([4,6], [17,2], [37,3], [48,15], [35,42], [23,44], [2,13])
         .attr({'z':100})

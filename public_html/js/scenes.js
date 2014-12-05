@@ -31,9 +31,14 @@ Crafty.scene("sce_loading", function() {
                 "tileh": 127,
                 "map": { "spr_sailopening": [0,1] }
             },
+            "spr_jollyboat.png": {
+                "tile": 200,
+                "tileh": 100,
+                "map": { "spr_jollyboat": [0,1] }
+            }
         }
     };
-
+    // spr_jollyboat.png
     // Load our sprite map image
     Crafty.load(assetsObj, function(){
         Crafty.e('2D, Canvas, Mouse, Image')
@@ -107,7 +112,7 @@ Crafty.scene("main", function() {
     
 
     // draw the jolly boat
-    Crafty.e('jollyBoat').at(Game.map_grid.width * Game.map_grid.tile.width / 2 - 3, Game.map_grid.height * Game.map_grid.tile.height - 80);
+    Crafty.e('jollyBoat').at(Game.map_grid.width * Game.map_grid.tile.width / 2 - 3, Game.map_grid.height * Game.map_grid.tile.height - 30);
     
     
     // add extra randomly
@@ -136,21 +141,23 @@ Crafty.scene("main", function() {
     });
     
     
-
+    //Crafty.e('Test, RandBirdPosFromLeft');  
 	
     // generate random birds
     for(var i = 0; i < 5; i++)
     {
-        var bird = Crafty.e('Bird, RandomPosition');  
+        var bird = Crafty.e('Bird, RandBirdPos');  
         bird.speed = Crafty.math.randomInt(2, 8) / 10;
     }
 
     // generate birds infinitly
     setInterval(function()
     {
-        var birdFromLeft = Crafty.e('Bird, RandomPositionOnX'); 
+        //Crafty.e('Bird'); 
+        
+        var birdFromLeft = Crafty.e('Bird, RandBirdPosFromLeft'); 
         birdFromLeft.speed = Crafty.math.randomInt(2, 8) / 10;
-    }, Crafty.math.randomInt(3000, 20000));
+    }, Crafty.math.randomInt(2000, 15000));
     
     
 });
