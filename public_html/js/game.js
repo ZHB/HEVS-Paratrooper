@@ -49,13 +49,17 @@ Game = {
  */
 function drawGrass() 
 {
+    Crafty.e('Water');
+    /*
     // Add grass fow the whole world width
-    for (var x = 0; x < Game.map_grid.width; x++) {
-        Crafty.e('Water').at(
-            x, 
-            Game.map_grid.height - 1 // last tile
-        );
-    }
+    for (var x = Game.map_grid.width * -1.5; x < Game.map_grid.width * 1.5; x++) {
+        for (var y = Game.map_grid.height - 1; y < Game.map_grid.height + 10; y++) {
+            Crafty.e('Water').at(
+                x, 
+                y // last tile
+            );
+        }
+    }*/
 }
 
 /**
@@ -80,8 +84,45 @@ function jump(plane)
     var plane_width = plane._w;
     var plane_position = plane._x;
     
+    
+    var paratrooperBody = Crafty.e('ParatrooperBody').at(plane_position + plane_width / 2, 70);
+    Crafty.viewport.centerOn(paratrooperBody, 1000);
+    
+    
+    
+    paratrooperBody.gravityConst(0.1).gravity("Floor");
+    
+    var ParatrooperSailOpening = Crafty.e('ParatrooperSailOpening').at(paratrooperBody._x - 60 , paratrooperBody._y - 120);
+    paratrooperBody.attach(ParatrooperSailOpening);
+    
+    
+    // open the sail after 0.8 sec
+    paratrooperBody.delay(function() {
+            // destroy the paratrooper before creating the new one with the parachute
+            //this.destroy();
+            
+            // add the paratrooper with opened sail
+            //var paratrooperBody = Crafty.e('ParatrooperBody').at(parachute._x, parachute._y);
+            this.antigravity();
+            Crafty.viewport.follow(paratrooperBody, 0, 0);
+            
+            //var ParatrooperSail = Crafty.e('ParatrooperSail').at(paratrooperBody._x - 60 , paratrooperBody._y - 120);
+            //paratrooperBody.attach(ParatrooperSail);
+            
+                
+            //Crafty.viewport.follow(paraSailOpened, 0, 0);
+        }, 1000, 0);
+}
+/*
+function jump(plane) 
+{       
+    var plane_width = plane._w;
+    var plane_position = plane._x;
+    
     // jump from the middle of the plane
     parachute = Crafty.e('ParatrooperSailClosed').at(plane_position + plane_width / 2, 70);
+    var ParatrooperSailOpening = Crafty.e('ParatrooperSailOpening').at(parachute._x - 60 , parachute._y - 120);
+    parachute.attach(ParatrooperSailOpening);
     
     // open the sail after 0.8 sec
     parachute.delay(function() {
@@ -98,4 +139,4 @@ function jump(plane)
                 
             //Crafty.viewport.follow(paraSailOpened, 0, 0);
         }, 800, 0);
-}
+}*/

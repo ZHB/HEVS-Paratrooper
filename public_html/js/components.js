@@ -81,9 +81,12 @@ Crafty.c('Floor', {
 // A Tree is just an Actor with a certain color/image
 Crafty.c('Water', {
     init: function() {
-        this.requires('2D, Canvas, GridAlignment, Image')
-        .attr({'z':100})
-        .image("./assets/water.jpg");
+        this.requires('2D, Canvas, PixelAlignment, Image, Color')
+        .attr({'z':10})
+        .at(-800, 730)
+        .dim(3500, 200)
+        .color("#4588e1");
+        //.image("./assets/water.jpg");
     }
 });
 Crafty.c('RightIsland', {
@@ -96,7 +99,7 @@ Crafty.c('RightIsland', {
 });
 Crafty.c('LeftIsland', {
     init: function() {
-        this.requires('2D, Canvas, GridAlignment, Image')
+        this.requires('2D, Canvas, GridAlignment, Image, Collision')
         .attr({'z':500})
         .image("./assets/islandLeft.png");
     }
@@ -176,7 +179,17 @@ Crafty.c('ParatrooperSailClosed', {
     }
 });
 
+
+
 // paratroopersailopen.png
+
+Crafty.c('ParatrooperSailOpening', {
+    init: function() {
+        this.requires('2D, Canvas, PixelAlignment, Image, SpriteAnimation, spr_sailopening')
+        .reel('PlayerMovingRisght', 800, 0, 0, 12) // time between changes, colums, row, number
+        .animate('PlayerMovingRisght', 1); // -1 : infinite animation
+    }
+});
 
 Crafty.c('ParatrooperSail', {
     init: function() {
@@ -187,7 +200,7 @@ Crafty.c('ParatrooperSail', {
 
 Crafty.c('ParatrooperBody', {
     init: function() {
-        this.requires('2D, Canvas, PixelAlignment, Multiway, Image, Gravity, Delay, Collision, Tween')
+        this.requires('2D, Canvas, PixelAlignment, Multiway, Image, Gravity, Delay, Collision, Tween, Particles')
         .image("./assets/paratrooperBody.png")
         .dim(42, 40)
 		// open parachute after cerain delay
@@ -195,7 +208,7 @@ Crafty.c('ParatrooperBody', {
             // add possibility to move the paratrooper after it has opened his sail
             this.multiway(1.3, {DOWN_ARROW: 90, RIGHT_ARROW: 0, LEFT_ARROW: 180}); // speed, directions
         }, 600, 0)
-        .collision()
+        .collision([4,13], [15,14], [14,12], [13,9], [13,5], [17,2], [22,2], [26,4], [26,10], [32,9], [38,14], [38,17], [34,17], [28,19], [27,23], [31,32], [35,31], [35,33], [31,36], [25,29], [18,28], [12,36], [7,33], [11,33], [15,25], [15,19], [8,15], [3,15])  
         .bind("EnterFrame", function(e) {
             this.y = this._y + 0.2; // custom gravity
         })
@@ -225,6 +238,12 @@ Crafty.c('ParatrooperBody', {
             e[0].obj.destroy();
         }, function(e) { // callback after hit
             updateScores(0, 1, 0);
+        })
+        .onHit("RightIsland", function(e) {
+            alert('Game over');
+        })
+        .onHit("LeftIsland", function(e) {
+            alert('Game over');
         })
         .bind('KeyDown', function(e) {
             if(e.key === Crafty.keys.LEFT_ARROW) {

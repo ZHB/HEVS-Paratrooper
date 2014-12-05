@@ -25,7 +25,12 @@ Crafty.scene("sce_loading", function() {
                 "tile": 32,
                 "tileh": 32,
                 "map": { "spr_egg": [0,1] }
-            }
+            },
+             "spr_sailopening.png": {
+                "tile": 150,
+                "tileh": 127,
+                "map": { "spr_sailopening": [0,1] }
+            },
         }
     };
 
@@ -74,6 +79,9 @@ Crafty.scene("score", function() {
 
 // Game screen
 Crafty.scene("main", function() {
+    
+    Crafty.viewport.bounds = {min:{x:-500, y:0}, max:{x:2000, y:900}};
+    
     //Crafty.background('SkyBlue');
     //Crafty.background('url("./assets/header-bg.png") no-repeat center top #7dcfff');
     Crafty.background('#81d4fa');
@@ -85,7 +93,7 @@ Crafty.scene("main", function() {
     Crafty.e('LeftIsland').at(0, Game.map_grid.height - 8).dim(15, 13);
     
 	
-        
+     
     
     Crafty.e('Floor');
 
@@ -116,6 +124,10 @@ Crafty.scene("main", function() {
     
     // the plane
     var plane = Crafty.e('Plane').at(0, 50).dim(200, 63);
+    
+    
+    //Crafty.viewport.follow(plane, 0, 0);
+    
     plane.bind("KeyDown", function(e) {
         if(e.keyCode === 32 && !Crafty.isPaused() && !Game.paratrooperHasJumped) { // see http://craftyjs.com/api/Crafty-keys.html
             Game.paratrooperHasJumped = true; // prevent multiple paratrooper
