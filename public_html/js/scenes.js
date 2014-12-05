@@ -59,17 +59,49 @@ Crafty.scene("sce_loading", function() {
 
 // score screen
 Crafty.scene("score", function() {
-        
+    
+    var winScores = Crafty.storage('winScores');
+    
+    var myScore = 73;
+
+
+    // add last score to the array (at the end)
+    winScores.push(myScore);
+    
+    // sort the array
+    //winScores.sort();
+    
+    // remove last element
+    if (winScores.length > 5) {
+        winScores.splice(5, 5);
+    }
+
+    // store score if needed
+    Crafty.storage('winScores', winScores);
         
         
     
+   
     Crafty.background('#111');    
         
     Crafty.e("2D, DOM, Text")
-            .attr({ x: Crafty.viewport.width / 2 - 215, y: 100 })
-            .textFont({ size: '65px', weight: 'bold', width: '100%' })
-            .text("Game Over")
+            .attr({ x: Crafty.viewport.width / 2 - 180, y: 250 })
+            .textFont({ size: '200px', weight: 'bold', width: '100%' })
+            .text(myScore)
             .textColor('#ffffff');
+    
+    var i = 0;
+    for (var key in winScores){
+
+      
+        Crafty.e("2D, DOM, Text")
+            .attr({ x: Crafty.viewport.width / 2 - 215, y: 400 + i })
+            .textFont({ size: '50px', weight: 'bold', width: '100%' })
+            .text(winScores[key])
+            .textColor('#ffffff');
+    
+        i = i + 50;
+     }
     
     //Crafty.stop(true);
 }); 
@@ -104,6 +136,8 @@ Crafty.scene("main", function() {
 
     
     drawClouds();
+    Crafty.e('WaterCollision');
+    
 
     
     // Place grass at bottom of our world
@@ -112,7 +146,10 @@ Crafty.scene("main", function() {
     
 
     // draw the jolly boat
-    Crafty.e('jollyBoat').at(Game.map_grid.width * Game.map_grid.tile.width / 2 - 3, Game.map_grid.height * Game.map_grid.tile.height - 30);
+    var jollyBoat = Crafty.e('jollyBoat').at(Game.map_grid.width * Game.map_grid.tile.width / 2 - 3, Game.map_grid.height * Game.map_grid.tile.height - 30);
+    
+    var Nest = Crafty.e('Nest').at(jollyBoat._x + 90 , jollyBoat._y + 10 );
+    jollyBoat.attach(Nest);
     
     
     // add extra randomly
@@ -121,12 +158,9 @@ Crafty.scene("main", function() {
         if(!Crafty.isPaused()) {
             Crafty.e('ExtraUp');
         }
-    }, 2000);
+    }, 1500);
     
-    
-
-    
-    
+   
     // the plane
     var plane = Crafty.e('Plane').at(0, 50).dim(200, 63);
     

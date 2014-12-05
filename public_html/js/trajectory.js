@@ -10,7 +10,7 @@ Crafty.c("RandBirdPosFromLeft", {
 Crafty.c("RandBirdPos", {
     init: function() {
         this.attr({
-            x: Crafty.math.randomInt(50, Game.map_grid.width * Game.map_grid.tile.width),
+            x: Crafty.math.randomInt(Game.map_bounds.min.x, Game.map_bounds.max.x),
             y: Crafty.math.randomInt(50, Game.map_grid.height * Game.map_grid.tile.height - 400),
             rotation: 0
         });

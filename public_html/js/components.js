@@ -79,6 +79,14 @@ Crafty.c('Floor', {
 });
 
 // A Tree is just an Actor with a certain color/image
+Crafty.c('WaterCollision', {
+    init: function() {
+        this.requires('2D, Canvas, PixelAlignment, Collision')
+        .attr({'x': Game.map_bounds.min.x, 'y': Game.map_bounds.max.y - 100})
+        .dim(3500, 200)
+        .attr({'z':20});
+    }
+});
 Crafty.c('Water', {
     init: function() {
         this.requires('2D, Canvas, PixelAlignment, Image, Color')
@@ -101,9 +109,19 @@ Crafty.c('LeftIsland', {
     init: function() {
         this.requires('2D, Canvas, GridAlignment, Image, Collision')
         .attr({'z':200})
+        .collision([17,218], [19,206], [28,184], [48,165], [83,151], [121,146], [149,147], [185,155], [225,172], [253,189], [261,197], [266,206], [263,212], [236,219], [185,222], [93,225], [40,220])  
         .image("./assets/islandLeft.png");
     }
 });
+
+Crafty.c('Nest', {
+    init: function() {
+        this.requires('2D, Canvas, PixelAlignment, Collision')
+        //.dim(20, 60)
+        .attr({'z':500});
+    }
+});
+
 
 Crafty.c('jollyBoat', {
     dir: 'w',
@@ -119,7 +137,7 @@ Crafty.c('jollyBoat', {
             // move the plane in the right direction
             this.move(this.dir, this.speed);
         })
-        .collision([2,5], [5,9], [20,14], [39,19], [68,22], [107,22], [128,21], [147,17], [165,14], [172,11],[179,6], [176,32], [169,46], [166,50], [157,56], [25,56], [15,50], [10,43])
+        .collision([9,31], [87,53], [168,27], [195,46], [169,77], [53,76])
         .onHit("RightIsland", function(e) {
             this.unflip("X");
             this.shift(-5, 20, 0, 0);
@@ -208,6 +226,7 @@ Crafty.c('ParatrooperBody', {
     init: function() {
         this.requires('2D, Canvas, PixelAlignment, Multiway, Image, Gravity, Delay, Collision, Tween, Particles')
         .image("./assets/paratrooperBody.png")
+        .attr({'z':1000})
         .dim(42, 40)
 		// open parachute after cerain delay
         .delay(function() {
@@ -218,16 +237,15 @@ Crafty.c('ParatrooperBody', {
         .bind("EnterFrame", function(e) {
             this.y = this._y + 0.2; // custom gravity
         })
-        .onHit("Water", function(e) {
-            alert('dsdfsd');
-            
+        .onHit("WaterCollision", function(e) {
+            alert('CRASH WATER !!!!!');
         })
         .onHit("jollyBoat", function(e) {
-
-                // récupérer les positions x/y
-
-                // charger la scène score et afficher
-                Crafty.scene("score");
+            alert('CRASH BOAT !!!!!');
+        })
+        .onHit("Nest", function(e) {
+            
+            Crafty.scene("score"); // win the game, no show scores 
         })
         .onHit("ExtraUp", function(e) {
             e[0].obj.destroy();
@@ -246,10 +264,10 @@ Crafty.c('ParatrooperBody', {
             updateScores(0, 1, 0);
         })
         .onHit("RightIsland", function(e) {
-            alert('Game over');
+           alert('CRASH RIGHT ISLAND !!!!!');
         })
         .onHit("LeftIsland", function(e) {
-            alert('Game over');
+            alert('CRASH LEFT ISLAND !!!!!');
         })
         .bind('KeyDown', function(e) {
             if(e.key === Crafty.keys.LEFT_ARROW) {
