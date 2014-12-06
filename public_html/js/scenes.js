@@ -9,7 +9,10 @@ Crafty.scene("sce_loading", function() {
     var assetsObj = {
         "audio": {
             "planeflyingover": ["plane-flying-over.mp3"],
-            "paratrooperWind": ["wind.mp3"]
+            "paratrooperWind": ["wind.mp3"],
+            "audioThermal": ["thermal.wav"],
+            "audioEgg": ["egg.wav"],
+            "audioBird": ["bird.wav"]
         },
         "images": ["loading.png", "nuage3.png", "water.jpg", "init-template.png", "gameover-template.png"],
         "sprites": {
@@ -37,6 +40,11 @@ Crafty.scene("sce_loading", function() {
                 "tile": 200,
                 "tileh": 100,
                 "map": { "spr_jollyboat": [0,1] }
+            },
+            "spr_leftisland.png": {
+                "tile": 280,
+                "tileh": 250,
+                "map": { "spr_leftisland": [0,1] }
             }
         }
     };
@@ -137,7 +145,7 @@ Crafty.scene("score", function() {
     //alert(Crafty.viewport.width);
     
     Crafty.e("HTML, DOM")
-        .attr({x:0, y:110, w:1500, h:100})
+        .attr({x:0, y:110, w:Game.map_grid.width * Game.map_grid.tile.width, h:100})
         .css("textAlign", "center")
         .replace('<span style="color:#fff;font-size:200px;font-family:\'Agency FB\', Arial;">'+myScore+'</span>');
     
@@ -146,7 +154,7 @@ Crafty.scene("score", function() {
     for (var key in winScores)
     {
          Crafty.e("HTML, DOM")
-        .attr({x:0, y:450 + i, w:1500, h:100})
+        .attr({x:0, y:450 + i, w:Game.map_grid.width * Game.map_grid.tile.width, h:100})
         .css("textAlign", "center")
         .replace('<span style="color:#fff;font-size:50px;font-family:\'Agency FB\', Arial;">'+winScores[key]+'</span>');
 
@@ -157,17 +165,10 @@ Crafty.scene("score", function() {
 }); 
 
 
-
-
-
-
-
-
-
 // Game screen
 Crafty.scene("main", function() {
     
-    Crafty.viewport.bounds = {min:{x:-500, y:0}, max:{x:2000, y:900}};
+    Crafty.viewport.bounds = {min:{x:-500, y:0}, max:{x:2000, y:1500}};
     
     //Crafty.background('SkyBlue');
     //Crafty.background('url("./assets/header-bg.png") no-repeat center top #7dcfff');
@@ -176,27 +177,19 @@ Crafty.scene("main", function() {
     /* ############################ [loading scene assets] ############################ */
     
     // Right island
-    Crafty.e('RightIsland').at(Game.map_grid.width - 20, Game.map_grid.height - 11).dim(14, 12);
-    Crafty.e('LeftIsland').at(0, Game.map_grid.height - 8).dim(15, 13);
-    
-	
-     
-    
-    Crafty.e('Floor');
+    Crafty.e('RightIsland').at(1100, Game.map_bounds.max.y - 300);
+    Crafty.e('LeftIsland').at(100, Game.map_bounds.max.y - 270);
 
-    
     drawClouds();
     Crafty.e('WaterCollision');
     
-
-    
     // Place grass at bottom of our world
-    drawGrass();    
+    Crafty.e('Water');
     
     
 
     // draw the jolly boat
-    var jollyBoat = Crafty.e('jollyBoat').at(Game.map_grid.width * Game.map_grid.tile.width / 2 - 3, Game.map_grid.height * Game.map_grid.tile.height - 30);
+    var jollyBoat = Crafty.e('jollyBoat').at(500, Game.map_bounds.max.y - 120);
     
     var Nest = Crafty.e('Nest').at(jollyBoat._x + 90 , jollyBoat._y + 10 );
     jollyBoat.attach(Nest);
@@ -209,7 +202,7 @@ Crafty.scene("main", function() {
                                 if(!Crafty.isPaused()) {
                                     Crafty.e('ExtraUp');
                                 }
-                            }, 1500);
+                            }, 1400);
     
    
     // the plane
@@ -226,10 +219,10 @@ Crafty.scene("main", function() {
     });
 	
     // generate random birds
-    for(var i = 0; i < 5; i++)
+    for(var i = 0; i < 10; i++)
     {
         var bird = Crafty.e('Bird, RandBirdPos');  
-        bird.speed = Crafty.math.randomInt(2, 8) / 10;
+        bird.speed = Crafty.math.randomInt(2, 10) / 10;
     }
 
     // generate birds infinitly
@@ -239,7 +232,7 @@ Crafty.scene("main", function() {
 
                             var birdFromLeft = Crafty.e('Bird, RandBirdPosFromLeft'); 
                             birdFromLeft.speed = Crafty.math.randomInt(2, 8) / 10;
-                        }, Crafty.math.randomInt(2000, 15000));
+                        }, Crafty.math.randomInt(2000, 13000));
     
     
 });

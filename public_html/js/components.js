@@ -91,7 +91,7 @@ Crafty.c('Water', {
     init: function() {
         this.requires('2D, Canvas, PixelAlignment, Image, Color')
         .attr({'z':10})
-        .at(-800, 730)
+        .at(-800, 1370)
         .dim(3500, 200)
         .color("#4588e1");
         //.image("./assets/water.jpg");
@@ -99,7 +99,7 @@ Crafty.c('Water', {
 });
 Crafty.c('RightIsland', {
     init: function() {
-        this.requires('2D, Canvas, GridAlignment, Image, Collision')
+        this.requires('2D, Canvas, PixelAlignment, Image, Collision')
         .attr({'z':200})
         .collision([15,209], [17,203], [43,180], [68,166], [97,152], [88,134], [67,144], [53,132], [45,97], [118,71], [150,97], [158,64], [137,43], [165,2], [266,11], [269,56], [258,74], [229,75], [224,127], [214,155], [231,164], [254,189], [263,211])
         .image("./assets/island.png");
@@ -107,10 +107,12 @@ Crafty.c('RightIsland', {
 });
 Crafty.c('LeftIsland', {
     init: function() {
-        this.requires('2D, Canvas, GridAlignment, Image, Collision')
+        this.requires('2D, Canvas, PixelAlignment, Collision, SpriteAnimation, spr_leftisland')
         .attr({'z':200})
         .collision([17,218], [19,206], [28,184], [48,165], [83,151], [121,146], [149,147], [185,155], [225,172], [253,189], [261,197], [266,206], [263,212], [236,219], [185,222], [93,225], [40,220])  
-        .image("./assets/islandLeft.png");
+        //.image("./assets/islandLeft.png");
+        .reel('LeftIslandSprite', 800, 0, 0, 2) // time between changes, colums, row, number
+        .animate('LeftIslandSprite', -1); // -1 : infinite animation
     }
 });
 Crafty.c('Nest', {
@@ -152,8 +154,8 @@ Crafty.c('jollyBoat', {
 
 Crafty.c('Cloud', {
     init: function() {
-        this.requires('2D, DOM, Canvas, PixelAlignment, Image, Color')
-        .attr({'z':2000})
+        this.requires('2D, DOM, Canvas, PixelAlignment, Image')
+        .attr({'z':100})
         .dim(369, 165)
         .image("./assets/nuage3.png");
     }
@@ -173,7 +175,7 @@ Crafty.c('Plane', {
         .attr({'z':1})
         .bind("EnterFrame", function(e) { // event trigered when whe enter the frame : https://github.com/craftyjs/Crafty/wiki/Event-List
     
-            Crafty.audio.play("planeflyingover");
+            //Crafty.audio.play("planeflyingover");
             // move the plane in the right direction
             this.move(this.dir, this.speed);
 			
@@ -214,21 +216,19 @@ Crafty.c('ParatrooperSail', {
 
 Crafty.c('ParatrooperBody', {
     init: function() {
-        this.requires('2D, Canvas, PixelAlignment, Multiway, Image, Gravity, Delay, Collision, Tween, Particles')
+        this.requires('2D, Canvas, PixelAlignment, Multiway, Image, Gravity, Delay, Collision, Tween, Particles, HTML')
         .image("./assets/paratrooperBody.png")
-        .attr({'z':1000})
+        .attr({'z':90})
         .dim(42, 40)
-
-       
-		// open parachute after cerain delay
+        // open parachute after cerain delay
         .delay(function() {
             // add possibility to move the paratrooper after it has opened his sail
-            this.multiway(1.5, {DOWN_ARROW: 90, RIGHT_ARROW: 0, LEFT_ARROW: 180}); // speed, directions
-        }, 600, 0)
+            this.multiway(2, {DOWN_ARROW: 90, RIGHT_ARROW: 0, LEFT_ARROW: 180}); // speed, directions
+        }, 1000, 0)
         .collision([4,13], [15,14], [14,12], [13,9], [13,5], [17,2], [22,2], [26,4], [26,10], [32,9], [38,14], [38,17], [34,17], [28,19], [27,23], [31,32], [35,31], [35,33], [31,36], [25,29], [18,28], [12,36], [7,33], [11,33], [15,25], [15,19], [8,15], [3,15])  
         .bind("EnterFrame", function(e) {
             //Crafty.audio.play("paratrooperWind");	
-            this.y = this._y + 0.2; // custom gravity
+            this.y = this._y + 0.4; // custom gravity
         })
         .onHit("WaterCollision", function(e) {
             Crafty.scene("gameover");
@@ -240,18 +240,21 @@ Crafty.c('ParatrooperBody', {
             Crafty.scene("score"); // win the game, no show scores 
         })
         .onHit("ExtraUp", function(e) {
+            Crafty.audio.play("audioThermal");
             e[0].obj.destroy();
-            this.tween({rotation: 360, y: this._y - Crafty.math.randomInt(100, 200)}, 400);
+            this.tween({rotation: 360, y: this._y - Crafty.math.randomInt(100, 400)}, 500);
         }, function(e) {
            updateScores(1, 0, 0);
         })
         .onHit("Bird", function(e) {
-            //e[0].obj.destroy();
+            Crafty.audio.play("audioBird");
         }, function(e) { // callback after hit
             updateScores(0, 0, -3);
         })
         .onHit("Egg", function(e) {
+            Crafty.audio.play("audioEgg");
             e[0].obj.destroy();
+            
         }, function(e) { // callback after hit
             updateScores(0, 1, 0);
         })
@@ -287,7 +290,7 @@ Crafty.c('Bird', {
     speed: 0.35,
     init: function() {
         this.requires('2D, DOM, PixelAlignment, Animate, Collision, SpriteAnimation, spr_bird, Delay')
-        .attr({'z':100})
+        .attr({'z':80})
         .bind("EnterFrame", function(e) { // event trigered when whe enter the frame : https://github.com/craftyjs/Crafty/wiki/Event-List
             
             // move the plane in the right direction
@@ -310,13 +313,6 @@ Crafty.c('Bird', {
             var egg = Crafty.e('Egg');
                 egg.at(this._x, this._y);
         }, Crafty.math.randomInt(10000, 30000), Crafty.math.randomInt(3, 7))
-         // These next lines define our four animations
-        // each call to .animate specifies:
-        // - the name of the animation
-        // - the x and y coordinates within the sprite
-        // map at which the animation set begins
-        // - the number of animation frames *in addition to* the first one
-        //.animate('PlayerMovingRight', 0, 1, 2)
         .reel('PlayerMovingRisght', 1000, 0, 0, 7) // time between changes, colums, row, number
         .animate('PlayerMovingRisght', -1); // -1 : infinite animation
     }
@@ -325,10 +321,10 @@ Crafty.c('Bird', {
 
 Crafty.c('ExtraUp', {
     init: function() {
-        this.requires('2D, Canvas, PixelAlignment, SpriteAnimation, spr_arrow, RandPosTherm, RandomAppearTime, Collision')
+        this.requires('2D, Canvas, PixelAlignment, SpriteAnimation, spr_arrow, RandPosTherm, RandomAppearTime, Collision, HTML')
         //.dim(50,45)
         .collision([4,6], [17,2], [37,3], [48,15], [35,42], [23,44], [2,13])
-        .attr({'z':100})
+        .attr({'z':80})
         .reel('ArrowUp', 1000, 0, 0, 3) // time between changes, colums, row, number
         .animate('ArrowUp', -1); // -1 : infinite animation
     }
@@ -341,12 +337,12 @@ Crafty.c('Egg', {
     init: function() {
         this.requires('2D, Canvas, PixelAlignment, Image, SpriteAnimation, spr_egg, Delay, Collision')
         .dim(32,32)
-        .attr({'z':110})
+        .attr({'z':50})
         .collision([7,8], [11,2], [14,1], [19,1], [22,4], [27,10], [28,13], [28,20], [25,26], [24,27], [21,29], [10,30], [6,26], [4,23], [4,19], [4,14])
         .reel('EggFalling', 1000, 0, 0, 4) // time between changes, colums, row, number
         .animate('EggFalling', 1) // animate only once, then stop
         .bind("EnterFrame", function(e) {
-            this.y = this._y + 0.95; // Custom gravity
+            this.y = this._y + 1.85; // Custom gravity
         });
     }
 });

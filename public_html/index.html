@@ -5,14 +5,14 @@
 <meta charset="UTF-8">  
 <title>Paratrooper</title>
  <style>
-    body, html { margin:0; padding: 0; font-family:Arial; font-size:20px; }
+    body, html { margin:0; padding: 0; font-family:'Agency FB', Arial; font-size:30px; }
     
     #cr-stage { margin:0px auto; border:3px solid #000; border-top:none;}
     
     #game-container { border:5px solid #000; color:#fff;}
     #main-container {
         margin: 0 auto;
-        width: 1500px;
+        width: 1200px;
         background:#000;
         border: 3px solid #000;
         border-bottom:none;
@@ -50,26 +50,26 @@
         cursor:pointer;
     }
     .btn-pause {
-        background: url("./assets/pause.png") no-repeat scroll center center rgba(0, 0, 0, 0);
-    }
-    .btn-play {
         background: url("./assets/play.png") no-repeat scroll center center rgba(0, 0, 0, 0);
     }
+    .btn-play {
+        background: url("./assets/pause.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+    }
     .btn-mute {
-        background: url("./assets/volume-off.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+        background: url("./assets/volume-on.png") no-repeat scroll center center rgba(0, 0, 0, 0);
     }
     .btn-mute.inactive {
-        background: url("./assets/volume-on.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+        background: url("./assets/volume-off.png") no-repeat scroll center center rgba(0, 0, 0, 0);
     }
     .clearfix {
         clear:both;
     }
     input {
+        font-family:'Agency FB';
         background: none;
         color: #fff;
         border: none;
-        font-size: 18px;
-        width: 30px;
+        font-size: 30px;
     }
   </style>
 </head>

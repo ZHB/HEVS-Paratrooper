@@ -3,7 +3,7 @@ function updateScores(therm, egg, bird)
     if(bird !== 0) 
     {
         var inputScore = $('.scoreTotal');
-        inputScore.val(parseInt(inputScore.val(), 10) - 3);
+        inputScore.val(parseInt(inputScore.val(), 10) - 10);
     }
     
     if(therm !== 0) 
@@ -12,7 +12,7 @@ function updateScores(therm, egg, bird)
         inputScore.val(parseInt(inputScore.val(), 10) + 1);
             
         var inputScore = $('.scoreTotal');
-        inputScore.val(parseInt(inputScore.val(), 10) + 1);
+        inputScore.val(parseInt(inputScore.val(), 10) + 0);
     }
     
     if(egg !== 0) 
@@ -21,6 +21,6 @@ function updateScores(therm, egg, bird)
         inputScore.val(parseInt(inputScore.val(), 10) + 1);
             
         var inputScore = $('.scoreTotal');
-        inputScore.val(parseInt(inputScore.val(), 10) + 2);
+        inputScore.val(parseInt(inputScore.val(), 10) + 5);
     }
 }
