@@ -173,23 +173,17 @@ Crafty.c('Plane', {
         .image("./images/pc6porter.png")
         .attr({'z':1})
         .bind("EnterFrame", function(e) { // event trigered when whe enter the frame : https://github.com/craftyjs/Crafty/wiki/Event-List
-            
-		
-			Crafty.audio.play("planeflyingover");
+    
+	Crafty.audio.play("planeflyingover");
             // move the plane in the right direction
             this.move(this.dir, this.speed);
 			
-			if(this.x > Game.map_grid.width * Game.map_grid.tile.width || this.x < 0) { 
+            if(this.x > Game.map_grid.width * Game.map_grid.tile.width || this.x < 0) { 
                 Crafty.audio.remove("planeflyingover");
-            }
-			
-			
+            }			
         })
     }
 });
-
-
-//http://buildnewgames.com/introduction-to-crafty/
 
 /*
  * Create a parachute with a default gravity
@@ -202,10 +196,6 @@ Crafty.c('ParatrooperSailClosed', {
         .gravity("Floor");
     }
 });
-
-
-
-// paratroopersailopen.png
 
 Crafty.c('ParatrooperSailOpening', {
     init: function() {
@@ -244,7 +234,6 @@ Crafty.c('ParatrooperBody', {
             alert('CRASH BOAT !!!!!');
         })
         .onHit("Nest", function(e) {
-            
             Crafty.scene("score"); // win the game, no show scores 
         })
         .onHit("ExtraUp", function(e) {
@@ -290,34 +279,6 @@ Crafty.c('Invisible', {
     }
 });
 
-/*
-Crafty.c('Bird', {
-    dir: 'e',
-    speed: 0.35,
-    init: function() {
-        this.requires('2D, Canvas, PixelAlignment, Color')
-        .color('#ff0000')
-        .bind("EnterFrame", function(e) { // event trigered when whe enter the frame : https://github.com/craftyjs/Crafty/wiki/Event-List
-            
-            //this.animate('PlayerMovingRight', 8, -1);
-            
-            // move the plane in the right direction
-            this.move(this.dir, this.speed);
-            
-            if(this.x > Game.map_grid.width * Game.map_grid.tile.width || this.x < 0  || this.y >= Game.map_grid.height * Game.map_grid.tile.height - 2 * Game.map_grid.tile.height ) { 
-                this.destroy();
-            }
-        });
-        //.attr({'x':-300, 'y':50});
-    }
-});*/
-
-
-
-// new egg randomly
-        
-// Create our player entity with some premade components
-
 Crafty.c('Bird', {
     dir: 'e',
     speed: 0.35,
@@ -325,8 +286,6 @@ Crafty.c('Bird', {
         this.requires('2D, DOM, PixelAlignment, Animate, Collision, SpriteAnimation, spr_bird, Delay')
         .attr({'z':100})
         .bind("EnterFrame", function(e) { // event trigered when whe enter the frame : https://github.com/craftyjs/Crafty/wiki/Event-List
-            
-            //this.animate('PlayerMovingRight', 8, -1);
             
             // move the plane in the right direction
             this.move(this.dir, this.speed);

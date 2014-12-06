@@ -9,7 +9,7 @@ Crafty.scene("sce_loading", function() {
         "audio": {
             "planeflyingover": ["plane-flying-over.mp3"]
         },
-        "images": ["loading.png", "nuage3.png", "water.jpg", "boatnest.jpg"],
+        "images": ["loading.png", "nuage3.png", "water.jpg"],
         "sprites": {
             "spr_bird.png": {
                 "tile": 40,
@@ -46,6 +46,7 @@ Crafty.scene("sce_loading", function() {
             .image("./assets/loading.png")
             .bind('Click', function(MouseEvent){
                 Crafty.scene("main");
+                //Crafty.scene("score");
             });
     },
     function() {
@@ -60,17 +61,19 @@ Crafty.scene("sce_loading", function() {
 // score screen
 Crafty.scene("score", function() {
     
+    
+    // load best scores
     var winScores = Crafty.storage('winScores');
     
-    var myScore = 73;
+    // get the current score
+    var myScore = $('.scoreTotal').val();
 
-
-    // add last score to the array (at the end)
+     // add last score to the array (at the end)
     winScores.push(myScore);
-    
+
     // sort the array
-    //winScores.sort();
-    
+    winScores.sort(function(a, b) {return b-a});
+
     // remove last element
     if (winScores.length > 5) {
         winScores.splice(5, 5);
@@ -79,24 +82,21 @@ Crafty.scene("score", function() {
     // store score if needed
     Crafty.storage('winScores', winScores);
         
-        
-    
-   
-    Crafty.background('#111');    
-        
-    Crafty.e("2D, DOM, Text")
-            .attr({ x: Crafty.viewport.width / 2 - 180, y: 250 })
-            .textFont({ size: '200px', weight: 'bold', width: '100%' })
+    Crafty.background('url("./assets/scores-template.png") no-repeat center top #111');    
+
+    Crafty.e("DOM, Text")
+            .attr({ x: 562, y: 230 })
+            .textFont({ family: '"Agency FB", Arial', size: '200px', weight: 'bold', width: '100%' })
             .text(myScore)
             .textColor('#ffffff');
     
     var i = 0;
-    for (var key in winScores){
+    for (var key in winScores)
+    {
 
-      
-        Crafty.e("2D, DOM, Text")
-            .attr({ x: Crafty.viewport.width / 2 - 215, y: 400 + i })
-            .textFont({ size: '50px', weight: 'bold', width: '100%' })
+        Crafty.e("DOM, Text")
+            .attr({ x: 582, y: 560 + i })
+            .textFont({ family: '"Agency FB", Arial', size: '50px', weight: 'bold', width: '100%' })
             .text(winScores[key])
             .textColor('#ffffff');
     
