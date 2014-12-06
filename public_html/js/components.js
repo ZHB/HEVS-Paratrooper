@@ -113,7 +113,6 @@ Crafty.c('LeftIsland', {
         .image("./assets/islandLeft.png");
     }
 });
-
 Crafty.c('Nest', {
     init: function() {
         this.requires('2D, Canvas, PixelAlignment, Collision')
@@ -154,7 +153,7 @@ Crafty.c('jollyBoat', {
 Crafty.c('Cloud', {
     init: function() {
         this.requires('2D, DOM, Canvas, PixelAlignment, Image, Color')
-        .attr({'z':5})
+        .attr({'z':2000})
         .dim(369, 165)
         .image("./assets/nuage3.png");
     }
@@ -174,11 +173,12 @@ Crafty.c('Plane', {
         .attr({'z':1})
         .bind("EnterFrame", function(e) { // event trigered when whe enter the frame : https://github.com/craftyjs/Crafty/wiki/Event-List
     
-	Crafty.audio.play("planeflyingover");
+            Crafty.audio.play("planeflyingover");
             // move the plane in the right direction
             this.move(this.dir, this.speed);
 			
-            if(this.x > Game.map_grid.width * Game.map_grid.tile.width || this.x < 0) { 
+            if(this.x > Game.map_bounds.max.x || this.x < 0) { 
+                this.destroy();
                 Crafty.audio.remove("planeflyingover");
             }			
         })
@@ -218,20 +218,23 @@ Crafty.c('ParatrooperBody', {
         .image("./assets/paratrooperBody.png")
         .attr({'z':1000})
         .dim(42, 40)
+
+       
 		// open parachute after cerain delay
         .delay(function() {
             // add possibility to move the paratrooper after it has opened his sail
-            this.multiway(1.3, {DOWN_ARROW: 90, RIGHT_ARROW: 0, LEFT_ARROW: 180}); // speed, directions
+            this.multiway(1.5, {DOWN_ARROW: 90, RIGHT_ARROW: 0, LEFT_ARROW: 180}); // speed, directions
         }, 600, 0)
         .collision([4,13], [15,14], [14,12], [13,9], [13,5], [17,2], [22,2], [26,4], [26,10], [32,9], [38,14], [38,17], [34,17], [28,19], [27,23], [31,32], [35,31], [35,33], [31,36], [25,29], [18,28], [12,36], [7,33], [11,33], [15,25], [15,19], [8,15], [3,15])  
         .bind("EnterFrame", function(e) {
+            //Crafty.audio.play("paratrooperWind");	
             this.y = this._y + 0.2; // custom gravity
         })
         .onHit("WaterCollision", function(e) {
-            alert('CRASH WATER !!!!!');
+            Crafty.scene("gameover");
         })
         .onHit("jollyBoat", function(e) {
-            alert('CRASH BOAT !!!!!');
+            Crafty.scene("gameover");
         })
         .onHit("Nest", function(e) {
             Crafty.scene("score"); // win the game, no show scores 
@@ -253,10 +256,10 @@ Crafty.c('ParatrooperBody', {
             updateScores(0, 1, 0);
         })
         .onHit("RightIsland", function(e) {
-           alert('CRASH RIGHT ISLAND !!!!!');
+            Crafty.scene("gameover");
         })
         .onHit("LeftIsland", function(e) {
-            alert('CRASH LEFT ISLAND !!!!!');
+            Crafty.scene("gameover");
         })
         .bind('KeyDown', function(e) {
             if(e.key === Crafty.keys.LEFT_ARROW) {

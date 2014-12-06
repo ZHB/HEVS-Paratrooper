@@ -46,7 +46,7 @@ Game = {
         // call our loading scene
         Crafty.scene("sce_loading");
         
-        
+        // reset scores
         $('#game-info input').val(0);
     }
 }
@@ -79,7 +79,7 @@ function drawGrass()
  */
 function drawClouds() 
 {
-    var number = Crafty.math.randomInt(2, 7);
+    var number = Crafty.math.randomInt(2, 20);
     
     for(var i = 0; i < number; i++) 
     {

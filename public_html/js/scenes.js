@@ -1,15 +1,17 @@
 // spashscreen
 Crafty.scene("sce_loading", function() {
-    Crafty.background("#111");
+    //Crafty.background("#111");
+    Crafty.background('url("./assets/init-template.png") no-repeat center top #111');   
     
     Crafty.paths({ audio: "./sounds/", images: "./assets/", sprites: "./assets/" });
     
     // assets to load
     var assetsObj = {
         "audio": {
-            "planeflyingover": ["plane-flying-over.mp3"]
+            "planeflyingover": ["plane-flying-over.mp3"],
+            "paratrooperWind": ["wind.mp3"]
         },
-        "images": ["loading.png", "nuage3.png", "water.jpg"],
+        "images": ["loading.png", "nuage3.png", "water.jpg", "init-template.png", "gameover-template.png"],
         "sprites": {
             "spr_bird.png": {
                 "tile": 40,
@@ -40,14 +42,35 @@ Crafty.scene("sce_loading", function() {
     };
     // spr_jollyboat.png
     // Load our sprite map image
+    
+    
     Crafty.load(assetsObj, function(){
-        Crafty.e('2D, Canvas, Mouse, Image')
-            .attr({x: Crafty.viewport.width / 2 - 215})
-            .image("./assets/loading.png")
-            .bind('Click', function(MouseEvent){
-                Crafty.scene("main");
-                //Crafty.scene("score");
-            });
+        
+        
+      
+        function load_scene(scene, duration) {
+            Crafty.e("2D, Canvas, Tween, Color")
+                .attr({alpha:0.0, x:0, y:0, w:1500, h:800})
+                .color("#000000")
+                .tween({alpha: 1.0}, duration)
+                .bind("TweenEnd", function() {
+                    Crafty.scene(scene);
+                    Crafty.e("2D, Canvas, Tween, Color")
+                        .attr({alpha:1.0, x:0, y:0, w:1500, h:800})
+                        .color("#000000")
+                        .tween({alpha: 0.0}, duration);
+                });
+        }
+
+         
+        Crafty.e("Delay").delay(function() {
+            
+            load_scene('main', 400);
+        }, 4000, 0, function() {
+            console.log("delay finished");
+        });
+
+        
     },
     function() {
         console.log("Loading assets");
@@ -58,12 +81,39 @@ Crafty.scene("sce_loading", function() {
     );
 }); 
 
+Crafty.scene("gameover", function() {
+    
+    Crafty.background('url("./assets/gameover-template.png") no-repeat center center #111');    
+    
+    // stop calling set intervall
+    clearInterval(extraSetInterval);
+    clearInterval(birdsSetInterval);
+    
+    Crafty.audio.toggleMute();
+});
+
 // score screen
 Crafty.scene("score", function() {
+    
+    // reset viewport dimensions
+    Crafty.viewport.x = 0;
+    Crafty.viewport.y = 0;
+    Crafty.viewport.reset();
+    
+
+    
+    // stop calling set intervall
+    clearInterval(extraSetInterval);
+    clearInterval(birdsSetInterval);
     
     
     // load best scores
     var winScores = Crafty.storage('winScores');
+    
+    // create new array if it doesn't exist
+    if(!winScores) {
+        winScores = new Array();
+    }
     
     // get the current score
     var myScore = $('.scoreTotal').val();
@@ -84,24 +134,24 @@ Crafty.scene("score", function() {
         
     Crafty.background('url("./assets/scores-template.png") no-repeat center top #111');    
 
-    Crafty.e("DOM, Text")
-            .attr({ x: 562, y: 230 })
-            .textFont({ family: '"Agency FB", Arial', size: '200px', weight: 'bold', width: '100%' })
-            .text(myScore)
-            .textColor('#ffffff');
+    //alert(Crafty.viewport.width);
+    
+    Crafty.e("HTML, DOM")
+        .attr({x:0, y:110, w:1500, h:100})
+        .css("textAlign", "center")
+        .replace('<span style="color:#fff;font-size:200px;font-family:\'Agency FB\', Arial;">'+myScore+'</span>');
+    
     
     var i = 0;
     for (var key in winScores)
     {
+         Crafty.e("HTML, DOM")
+        .attr({x:0, y:450 + i, w:1500, h:100})
+        .css("textAlign", "center")
+        .replace('<span style="color:#fff;font-size:50px;font-family:\'Agency FB\', Arial;">'+winScores[key]+'</span>');
 
-        Crafty.e("DOM, Text")
-            .attr({ x: 582, y: 560 + i })
-            .textFont({ family: '"Agency FB", Arial', size: '50px', weight: 'bold', width: '100%' })
-            .text(winScores[key])
-            .textColor('#ffffff');
-    
         i = i + 50;
-     }
+     } 
     
     //Crafty.stop(true);
 }); 
@@ -153,12 +203,13 @@ Crafty.scene("main", function() {
     
     
     // add extra randomly
-    setInterval(function()
-    {   
-        if(!Crafty.isPaused()) {
-            Crafty.e('ExtraUp');
-        }
-    }, 1500);
+    //var refreshIntervalId = setInterval(fname, 10000);
+    extraSetInterval = setInterval(function()
+                            {   
+                                if(!Crafty.isPaused()) {
+                                    Crafty.e('ExtraUp');
+                                }
+                            }, 1500);
     
    
     // the plane
@@ -173,9 +224,6 @@ Crafty.scene("main", function() {
             jump(plane);
         }
     });
-    
-    
-    //Crafty.e('Test, RandBirdPosFromLeft');  
 	
     // generate random birds
     for(var i = 0; i < 5; i++)
@@ -185,13 +233,14 @@ Crafty.scene("main", function() {
     }
 
     // generate birds infinitly
-    setInterval(function()
-    {
-        //Crafty.e('Bird'); 
-        
-        var birdFromLeft = Crafty.e('Bird, RandBirdPosFromLeft'); 
-        birdFromLeft.speed = Crafty.math.randomInt(2, 8) / 10;
-    }, Crafty.math.randomInt(2000, 15000));
+    birdsSetInterval = setInterval(function()
+                        {
+                            //Crafty.e('Bird'); 
+
+                            var birdFromLeft = Crafty.e('Bird, RandBirdPosFromLeft'); 
+                            birdFromLeft.speed = Crafty.math.randomInt(2, 8) / 10;
+                        }, Crafty.math.randomInt(2000, 15000));
     
     
 });
+
