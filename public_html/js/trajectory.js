@@ -1,3 +1,6 @@
+/**
+ * Set a random position for entities from the left at a rand height
+ */
 Crafty.c("RandBirdPosFromLeft", {
     init: function() {        
         this.attr({
@@ -7,6 +10,9 @@ Crafty.c("RandBirdPosFromLeft", {
     }
 });
 
+/**
+ * Set birds a random position when the game starts
+ */
 Crafty.c("RandBirdPos", {
     init: function() {
         this.attr({
@@ -17,6 +23,9 @@ Crafty.c("RandBirdPos", {
     }
 });
 
+/**
+ * Set a random position for thermals (up wind)
+ */
 Crafty.c("RandPosTherm", {
     init: function() {
         this.attr({
@@ -27,16 +36,9 @@ Crafty.c("RandPosTherm", {
     }
 });
 
-Crafty.c("RandomPositionFromTop", {
-    init: function() {
-        this.attr({
-            x: Crafty.math.randomInt(50, Game.map_grid.width * Game.map_grid.tile.width),
-            y: 0,
-            rotation: 0
-        });
-    }
-});
-
+/**
+ * Set the duration for thermals (up wind)
+ */
 Crafty.c("RandomAppearTime", {
     init: function() {
         this.requires('Delay')

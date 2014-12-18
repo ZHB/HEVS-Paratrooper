@@ -70,6 +70,9 @@ Crafty.c('PixelAlignment', {
  
 // ####################### [Nature] #######################
  
+/**
+ * Create the floor. Used for gravity
+ */
 Crafty.c('Floor', {
     init: function() {
         this.requires('2D, Canvas, PixelAlignment, Color')
@@ -78,7 +81,9 @@ Crafty.c('Floor', {
     }
 });
 
-// A Tree is just an Actor with a certain color/image
+/**
+ * Create an invisible entity for water collition
+ */
 Crafty.c('WaterCollision', {
     init: function() {
         this.requires('2D, Canvas, PixelAlignment, Collision')
@@ -87,24 +92,35 @@ Crafty.c('WaterCollision', {
         .attr({'z':20});
     }
 });
+
+/**
+ * Create water
+ */
 Crafty.c('Water', {
     init: function() {
-        this.requires('2D, Canvas, PixelAlignment, Image, Color')
+        this.requires('2D, Canvas, PixelAlignment, Color')
         .attr({'z':10})
         .at(-800, 1370)
         .dim(3500, 200)
         .color("#4588e1");
-        //.image("./assets/water.jpg");
     }
 });
+
+/**
+ * Create right island
+ */
 Crafty.c('RightIsland', {
     init: function() {
         this.requires('2D, Canvas, PixelAlignment, Image, Collision')
         .attr({'z':200})
-        .collision([15,209], [17,203], [43,180], [68,166], [97,152], [88,134], [67,144], [53,132], [45,97], [118,71], [150,97], [158,64], [137,43], [165,2], [266,11], [269,56], [258,74], [229,75], [224,127], [214,155], [231,164], [254,189], [263,211])
-        .image("./assets/island.png");
+        .collision([14,209], [16,201], [25,190], [43,179], [62,166], [67,165], [88,154], [96,153], [147,143], [189,147], [217,156], [243,173], [256,189], [261,206])
+        .image("./assets/images/island.png");
     }
 });
+
+/**
+ * Create left island
+ */
 Crafty.c('LeftIsland', {
     init: function() {
         this.requires('2D, Canvas, PixelAlignment, Collision, SpriteAnimation, spr_leftisland')
@@ -115,15 +131,20 @@ Crafty.c('LeftIsland', {
         .animate('LeftIslandSprite', -1); // -1 : infinite animation
     }
 });
+
+/**
+ * Nets on the boat, used for collision
+ */
 Crafty.c('Nest', {
     init: function() {
         this.requires('2D, Canvas, PixelAlignment, Collision')
-        //.dim(20, 60)
         .attr({'z':500});
     }
 });
 
-
+/**
+ * The boat
+ */
 Crafty.c('jollyBoat', {
     dir: 'w',
     speed: 3,
@@ -134,51 +155,51 @@ Crafty.c('jollyBoat', {
         .reel('JollyBoatSpr', 800, 0, 0, 2) // time between changes, colums, row, number
         .animate('JollyBoatSpr', -1) // -1 : infinite animation
         .bind("EnterFrame", function(e) { // event trigered when whe enter the frame : https://github.com/craftyjs/Crafty/wiki/Event-List
-            
             // move the plane in the right direction
             this.move(this.dir, this.speed);
         })
         .collision([9,31], [87,53], [168,27], [195,46], [169,77], [53,76])
-        .onHit("RightIsland", function(e) {
-            this.unflip("X");
-            this.shift(-5, 20, 0, 0);
+        // boat change direction islands hit
+        .onHit("RightIsland", function(e) { 
+            this.unflip("X"); // revert the boat
+            this.shift(-5, 20, 0, 0); // moving up effewct
             this.dir = 'w';
         })
         .onHit("LeftIsland", function(e) {
-            this.flip("X");
-            this.shift(5, -20, 0, 0);
+            this.flip("X"); // revert the boat
+            this.shift(5, -20, 0, 0); // moving down effect
             this.dir = 'e';
         })
     }
 });
 
+/**
+ * Clouds
+ */
 Crafty.c('Cloud', {
     init: function() {
         this.requires('2D, DOM, Canvas, PixelAlignment, Image')
         .attr({'z':100})
         .dim(369, 165)
-        .image("./assets/nuage3.png");
+        .image("./assets/images/nuage3.png");
     }
 });
 
-
-
-// ####################### [Plane] #######################
-
-// This is the player-controlled character
+/**
+ * Plane
+ */
 Crafty.c('Plane', {
     dir: 'e',
     speed: 2,
     init: function() {
         this.requires('2D, Canvas, PixelAlignment, Image, audio')
-        .image("./images/pc6porter.png")
+        .image("./assets/images/pc6porter.png")
         .attr({'z':1})
         .bind("EnterFrame", function(e) { // event trigered when whe enter the frame : https://github.com/craftyjs/Crafty/wiki/Event-List
-    
-            //Crafty.audio.play("planeflyingover");
-            // move the plane in the right direction
+            // move the plane in the east direction
             this.move(this.dir, this.speed);
-			
+            
+            // destroy when exit frame to save memory
             if(this.x > Game.map_bounds.max.x || this.x < 0) { 
                 this.destroy();
                 Crafty.audio.remove("planeflyingover");
@@ -193,12 +214,15 @@ Crafty.c('Plane', {
 Crafty.c('ParatrooperSailClosed', {
     init: function() {
         this.requires('2D, Canvas, PixelAlignment, Image, Gravity, Delay')
-        .image("./assets/paratrooperBody.png")
+        .image("./assets/images/paratrooperBody.png")
         .gravityConst(0.1)
         .gravity("Floor");
     }
 });
 
+/**
+ * Sail oppening effect with sprite
+ */
 Crafty.c('ParatrooperSailOpening', {
     init: function() {
         this.requires('2D, Canvas, PixelAlignment, Image, SpriteAnimation, spr_sailopening')
@@ -207,23 +231,29 @@ Crafty.c('ParatrooperSailOpening', {
     }
 });
 
+/**
+ * Paratrooper sail. Used because only body can hit objects
+ */
 Crafty.c('ParatrooperSail', {
     init: function() {
         this.requires('2D, Canvas, PixelAlignment, Image')
-        .image("./assets/paratrooperSail.png");
+        .image("./assets/images/paratrooperSail.png");
     }
 });
 
+/**
+ * Paratrooper body
+ */
 Crafty.c('ParatrooperBody', {
     init: function() {
         this.requires('2D, Canvas, PixelAlignment, Multiway, Image, Gravity, Delay, Collision, Tween, Particles, HTML')
-        .image("./assets/paratrooperBody.png")
+        .image("./assets/images/paratrooperBody.png")
         .attr({'z':90})
         .dim(42, 40)
         // open parachute after cerain delay
         .delay(function() {
             // add possibility to move the paratrooper after it has opened his sail
-            this.multiway(2, {DOWN_ARROW: 90, RIGHT_ARROW: 0, LEFT_ARROW: 180}); // speed, directions
+            this.multiway(3, {DOWN_ARROW: 90, RIGHT_ARROW: 0, LEFT_ARROW: 180}); // speed, directions
         }, 1000, 0)
         .collision([4,13], [15,14], [14,12], [13,9], [13,5], [17,2], [22,2], [26,4], [26,10], [32,9], [38,14], [38,17], [34,17], [28,19], [27,23], [31,32], [35,31], [35,33], [31,36], [25,29], [18,28], [12,36], [7,33], [11,33], [15,25], [15,19], [8,15], [3,15])  
         .bind("EnterFrame", function(e) {
@@ -246,9 +276,8 @@ Crafty.c('ParatrooperBody', {
         }, function(e) {
            updateScores(1, 0, 0);
         })
-        .onHit("Bird", function(e) {
-            Crafty.audio.play("audioBird");
-        }, function(e) { // callback after hit
+        .onHit("Bird", function(e) {}, function(e) { // callback after hit
+			Crafty.audio.play("audioBirdHit" + Crafty.math.randomInt(1, 6));
             updateScores(0, 0, -3);
         })
         .onHit("Egg", function(e) {
@@ -264,6 +293,7 @@ Crafty.c('ParatrooperBody', {
         .onHit("LeftIsland", function(e) {
             Crafty.scene("gameover");
         })
+        // only alowe moving left/right/down
         .bind('KeyDown', function(e) {
             if(e.key === Crafty.keys.LEFT_ARROW) {
                 this.rotation = -10;
@@ -278,13 +308,10 @@ Crafty.c('ParatrooperBody', {
     }
 });
 
-Crafty.c('Invisible', {
-    init: function() {
-        this.requires('2D, Canvas, PixelAlignment, Color')
-        .color('#ff0000');
-    }
-});
 
+/**
+ * Birds
+ */
 Crafty.c('Bird', {
     dir: 'e',
     speed: 0.35,
@@ -318,7 +345,9 @@ Crafty.c('Bird', {
     }
 });
 
-
+/**
+ * Extra up (wind up)
+ */
 Crafty.c('ExtraUp', {
     init: function() {
         this.requires('2D, Canvas, PixelAlignment, SpriteAnimation, spr_arrow, RandPosTherm, RandomAppearTime, Collision, HTML')

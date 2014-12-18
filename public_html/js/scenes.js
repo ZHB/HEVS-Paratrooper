@@ -1,20 +1,36 @@
 // spashscreen
 Crafty.scene("sce_loading", function() {
-    //Crafty.background("#111");
-    Crafty.background('url("./assets/init-template.png") no-repeat center top #111');   
+    Crafty.background("#111");
     
-    Crafty.paths({ audio: "./sounds/", images: "./assets/", sprites: "./assets/" });
+    // add the loading progress bar
+    Crafty.e("HTML, DOM")
+    .attr({x:0, y:320, w:Game.map_grid.width * Game.map_grid.tile.width, h:100})
+    .css("textAlign", "center")
+    .replace('<div id="progressbar" style="margin:0 70px;"></div>');
+    
+    var progress = 0; // start progress bar to 0
+    
+    // define path to assets
+    Crafty.paths({ audio: "./assets/sounds/", images: "./assets/images/", sprites: "./assets/images/" });
+    
     
     // assets to load
     var assetsObj = {
         "audio": {
-            "planeflyingover": ["plane-flying-over.mp3"],
-            "paratrooperWind": ["wind.mp3"],
-            "audioThermal": ["thermal.wav"],
+            "audioThermal": ["Jump.wav"],
             "audioEgg": ["egg.wav"],
-            "audioBird": ["bird.wav"]
+            "audioPlaneJump": ["planeJump.wav"],
+            "audioBirdHit1": ["birdHit1.wav"],
+            "audioBirdHit2": ["birdHit2.wav"],
+            "audioBirdHit3": ["birdHit3.wav"],
+            "audioBirdHit4": ["birdHit4.wav"],
+            "audioBirdHit5": ["birdHit5.wav"],
+            "audioBirdHit6": ["birdHit6.wav"],
+            "audioVictory": ["victory.wav"],
+            "audioBackground": ["musicbackground.mp3"],
+            "audioGameover": ["gameover.mp3"]
         },
-        "images": ["loading.png", "nuage3.png", "water.jpg", "init-template.png", "gameover-template.png"],
+        "images": ["nuage3.png", "pc6porter.png", "init-template.png", "gameover-template.png", "replay.png", "donate.png"],
         "sprites": {
             "spr_bird.png": {
                 "tile": 40,
@@ -48,67 +64,79 @@ Crafty.scene("sce_loading", function() {
             }
         }
     };
-    // spr_jollyboat.png
-    // Load our sprite map image
-    
-    
+
+    // load the array of asssets
     Crafty.load(assetsObj, function(){
-        
-        
-      
-        function load_scene(scene, duration) {
-            Crafty.e("2D, Canvas, Tween, Color")
-                .attr({alpha:0.0, x:0, y:0, w:1500, h:800})
-                .color("#000000")
-                .tween({alpha: 1.0}, duration)
-                .bind("TweenEnd", function() {
-                    Crafty.scene(scene);
-                    Crafty.e("2D, Canvas, Tween, Color")
-                        .attr({alpha:1.0, x:0, y:0, w:1500, h:800})
-                        .color("#000000")
-                        .tween({alpha: 0.0}, duration);
-                });
-        }
+            Crafty.background('url("./assets/images/init-template.png") no-repeat center top #111');  
 
-         
-        Crafty.e("Delay").delay(function() {
+            // load the main scene after a 4sec delay
+            Crafty.e("Delay").delay(function() {
+                load_scene('main', 400);
+            }, 4000, 0, function() {
+                console.log("delay finished");
+            });
+        },
+        function() {
+
+            progress = progress + 4.17;
+
+            // define the new value each time an asset is loaded
+            $("#progressbar").progressbar({
+                    value: progress
+            });
+
+            // hide de progress bar when all assets are loaded
+            if(progress >= 100) {
+                    $("#progressbar").hide();
+            }
+            console.log("Loading assets "+ progress);
+        },
+        function(e) {
             
-            load_scene('main', 400);
-        }, 4000, 0, function() {
-            console.log("delay finished");
-        });
-
-        
-    },
-    function() {
-        console.log("Loading assets");
-    },
-    function() {
-        console.log("Error loading assets");
-    }
+            console.log("Error loading asset !");
+        }
     );
 }); 
 
+/**
+ * Game over scene
+ */
 Crafty.scene("gameover", function() {
     
-    Crafty.background('url("./assets/gameover-template.png") no-repeat center center #111');    
+	// reset viewport dimensions
+    Crafty.viewport.x = 0;
+    Crafty.viewport.y = 0;
+    Crafty.viewport.reset();
+	
+    Crafty.background('url("./assets/images/gameover-template.png") no-repeat center center #111');    
     
+    // remove audio and play a new one
+    Crafty.audio.remove('audioBackground');
+    Crafty.audio.play('audioGameover');
+	
     // stop calling set intervall
     clearInterval(extraSetInterval);
     clearInterval(birdsSetInterval);
-    
-    Crafty.audio.toggleMute();
+	
+    //Crafty.e('Replay').at(300, 530);
+
+    Crafty.e("HTML, DOM")
+    .attr({x:0, y:530, w:Game.map_grid.width * Game.map_grid.tile.width, h:100})
+    .css("textAlign", "center")
+    .replace('<a href="./index.html" style="background:url(./assets/images/replay.png) no-repeat 0 0 transparent;display:inline-block;height:77px;text-indent:-99999px;width:189px;">Replay</a>');
 });
 
-// score screen
+/**
+ * Score scene
+ */
 Crafty.scene("score", function() {
-    
+    Crafty.audio.remove('audioBackground');
+    Crafty.audio.play('audioVictory');
+	
     // reset viewport dimensions
     Crafty.viewport.x = 0;
     Crafty.viewport.y = 0;
     Crafty.viewport.reset();
-    
-
     
     // stop calling set intervall
     clearInterval(extraSetInterval);
@@ -140,7 +168,7 @@ Crafty.scene("score", function() {
     // store score if needed
     Crafty.storage('winScores', winScores);
         
-    Crafty.background('url("./assets/scores-template.png") no-repeat center top #111');    
+    Crafty.background('url("./assets/images/scores-template.png") no-repeat center top #111');    
 
     //alert(Crafty.viewport.width);
     
@@ -150,6 +178,7 @@ Crafty.scene("score", function() {
         .replace('<span style="color:#fff;font-size:200px;font-family:\'Agency FB\', Arial;">'+myScore+'</span>');
     
     
+    // display best scores
     var i = 0;
     for (var key in winScores)
     {
@@ -160,19 +189,22 @@ Crafty.scene("score", function() {
 
         i = i + 50;
      } 
-    
-    //Crafty.stop(true);
 }); 
 
 
-// Game screen
+/**
+ * Main scene, (the game)s
+ */
 Crafty.scene("main", function() {
     
+    // set the game bounds
     Crafty.viewport.bounds = {min:{x:-500, y:0}, max:{x:2000, y:1500}};
     
     //Crafty.background('SkyBlue');
-    //Crafty.background('url("./assets/header-bg.png") no-repeat center top #7dcfff');
+    //Crafty.background('url("./assets/images/header-bg.png") no-repeat center top #7dcfff');
     Crafty.background('#81d4fa');
+	
+	
 	
     /* ############################ [loading scene assets] ############################ */
     
@@ -186,8 +218,6 @@ Crafty.scene("main", function() {
     // Place grass at bottom of our world
     Crafty.e('Water');
     
-    
-
     // draw the jolly boat
     var jollyBoat = Crafty.e('jollyBoat').at(500, Game.map_bounds.max.y - 120);
     
@@ -213,6 +243,7 @@ Crafty.scene("main", function() {
     
     plane.bind("KeyDown", function(e) {
         if(e.keyCode === 32 && !Crafty.isPaused() && !Game.paratrooperHasJumped) { // see http://craftyjs.com/api/Crafty-keys.html
+			Crafty.audio.play('audioPlaneJump');
             Game.paratrooperHasJumped = true; // prevent multiple paratrooper
             jump(plane);
         }
@@ -227,12 +258,12 @@ Crafty.scene("main", function() {
 
     // generate birds infinitly
     birdsSetInterval = setInterval(function()
-                        {
-                            //Crafty.e('Bird'); 
+    {
+        //Crafty.e('Bird'); 
 
-                            var birdFromLeft = Crafty.e('Bird, RandBirdPosFromLeft'); 
-                            birdFromLeft.speed = Crafty.math.randomInt(2, 8) / 10;
-                        }, Crafty.math.randomInt(2000, 13000));
+        var birdFromLeft = Crafty.e('Bird, RandBirdPosFromLeft'); 
+        birdFromLeft.speed = Crafty.math.randomInt(2, 8) / 10;
+    }, Crafty.math.randomInt(2000, 13000));
     
     
 });

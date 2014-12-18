@@ -1,3 +1,11 @@
+/**
+ * Used to calculate scores and to diplay on the top bar
+ * 
+ * @param int therm
+ * @param int egg
+ * @param int bird
+ * @returns null
+ */
 function updateScores(therm, egg, bird) 
 {
     if(bird !== 0) 
